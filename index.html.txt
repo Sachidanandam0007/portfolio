@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sachidanandam R — Portfolio</title>
+  <style>
+    /* ─── RESET & BASE ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --card: #181818;
+      --border: #2a2a2a;
+      --accent: #00e5a0;
+      --accent2: #7c6fff;
+      --text: #f0f0f0;
+      --muted: #888;
+      --font: 'Segoe UI', system-ui, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 5%;
+      height: 64px;
+    }
+    .nav-logo {
+      font-size: 1.1rem; font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); font-size: 0.85rem; letter-spacing: 0.08em;
+      text-transform: uppercase; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); text-decoration: none; }
+    .nav-admin-btn {
+      background: transparent; border: 1px solid var(--accent);
+      color: var(--accent); padding: 6px 14px; border-radius: 4px;
+      font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .nav-admin-btn:hover { background: var(--accent); color: #000; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 100px 5%; }
+    .section-label {
+      font-size: 0.75rem; letter-spacing: 0.2em; color: var(--accent);
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700; line-height: 1.2; margin-bottom: 1.5rem;
+    }
+    .divider {
+      width: 48px; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 2px; margin-bottom: 2.5rem;
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding-top: 120px;
+      position: relative; overflow: hidden;
+    }
+    .hero-grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,160,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,160,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 760px; position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.2);
+      padding: 6px 16px; border-radius: 99px;
+      font-size: 0.78rem; color: var(--accent); margin-bottom: 1.5rem;
+      letter-spacing: 0.08em;
+    }
+    .hero-badge::before {
+      content: ''; width: 6px; height: 6px;
+      background: var(--accent); border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.4); }
+    }
+    .hero-name {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+    .hero-name .highlight {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-hook {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      color: var(--muted); max-width: 600px;
+      margin: 1.2rem 0 0.6rem;
+      line-height: 1.6;
+    }
+    .hero-sub {
+      font-size: 0.9rem; color: var(--muted);
+      border-left: 2px solid var(--accent);
+      padding-left: 14px; margin: 1.5rem 0 2rem;
+      line-height: 1.6;
+    }
+    .hero-cta-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: #000;
+      padding: 12px 28px; border-radius: 6px;
+      font-weight: 700; font-size: 0.9rem;
+      transition: all 0.2s; border: none; cursor: pointer;
+      letter-spacing: 0.04em;
+    }
+    .btn-primary:hover { background: #00c98a; transform: translateY(-2px); text-decoration: none; color: #000; }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      padding: 12px 28px; border-radius: 6px;
+      border: 1px solid var(--border); font-size: 0.9rem;
+      transition: all 0.2s; cursor: pointer;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); text-decoration: none; }
+    .hero-stats {
+      display: flex; gap: 2.5rem; margin-top: 3rem;
+      flex-wrap: wrap;
+    }
+    .stat { display: flex; flex-direction: column; }
+    .stat-num {
+      font-size: 1.8rem; font-weight: 800; color: var(--accent);
+      line-height: 1;
+    }
+    .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+    /* ─── ABOUT ─── */
+    #about { background: var(--surface); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      align-items: center;
+    }
+    .about-text p { color: var(--muted); margin-bottom: 1rem; font-size: 0.97rem; }
+    .about-text p strong { color: var(--text); }
+    .about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+    .tag {
+      background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.18);
+      color: var(--accent); padding: 4px 12px; border-radius: 99px;
+      font-size: 0.75rem; letter-spacing: 0.05em;
+    }
+    .about-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem;
+    }
+    .about-card-item { display: flex; flex-direction: column; margin-bottom: 1.5rem; }
+    .about-card-item:last-child { margin-bottom: 0; }
+    .about-card-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+    .about-card-value { font-size: 0.97rem; color: var(--text); font-weight: 600; margin-top: 2px; }
+
+    /* ─── SKILLS ─── */
+    #skills {}
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .skill-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .skill-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .skill-card-icon { font-size: 1.6rem; margin-bottom: 0.8rem; }
+    .skill-card-title {
+      font-size: 0.8rem; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--accent); margin-bottom: 1rem;
+    }
+    .skill-pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .skill-pill {
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      color: var(--muted); padding: 3px 10px; border-radius: 4px;
+      font-size: 0.78rem;
+    }
+
+    /* ─── CASE STUDIES ─── */
+    #casestudies { background: var(--surface); }
+    .case-study {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2.5rem;
+      margin-bottom: 2rem; transition: border-color 0.2s;
+    }
+    .case-study:hover { border-color: var(--accent2); }
+    .case-tag {
+      display: inline-block;
+      background: rgba(124,111,255,0.1); border: 1px solid rgba(124,111,255,0.3);
+      color: var(--accent2); padding: 4px 12px; border-radius: 99px;
+      font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .case-study h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .case-study .case-meta { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .case-steps {
+      display: grid; gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      margin-top: 1.5rem;
+    }
+    .case-step {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1rem;
+    }
+    .case-step-label {
+      font-size: 0.68rem; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--accent); margin-bottom: 0.4rem;
+    }
+    .case-step p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+    .impact-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.25);
+      color: var(--accent); padding: 6px 14px; border-radius: 6px;
+      font-size: 0.82rem; font-weight: 600; margin-top: 1.2rem; margin-right: 0.5rem;
+    }
+
+    /* ─── EDUCATION & CERTS ─── */
+    #education {}
+    .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .edu-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.8rem;
+      transition: border-color 0.2s;
+    }
+    .edu-card:hover { border-color: var(--accent); }
+    .edu-card-year {
+      font-size: 0.72rem; color: var(--accent); text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 0.5rem;
+    }
+    .edu-card h4 { font-size: 1rem; margin-bottom: 0.3rem; }
+    .edu-card p { font-size: 0.85rem; color: var(--muted); }
+    .certs-list { list-style: none; margin-top: 2rem; display: flex; flex-direction: column; gap: 0.8rem; }
+    .cert-item {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.9rem 1.2rem;
+      font-size: 0.88rem;
+    }
+    .cert-icon { color: var(--accent); font-size: 1rem; }
+
+    /* ─── ACHIEVEMENTS ─── */
+    #achievements {}
+    .achievements-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.2rem;
+    }
+    .achievement-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.4rem;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+    }
+    .achievement-card:hover { border-color: var(--accent2); transform: translateY(-3px); }
+    .achievement-card .ach-icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
+    .achievement-card h4 { font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .achievement-card p { font-size: 0.82rem; color: var(--muted); }
+    .achievement-card .delete-btn {
+      position: absolute; top: 10px; right: 10px;
+      background: none; border: none; color: #ff4d4d;
+      cursor: pointer; font-size: 0.85rem; opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .achievement-card:hover .delete-btn { opacity: 1; }
+
+    /* ─── NEWSLETTER / CONNECT ─── */
+    #connect { background: var(--surface); text-align: center; }
+    .connect-inner { max-width: 600px; margin: 0 auto; }
+    .connect-inner p {
+      color: var(--muted); font-size: 0.97rem; margin-bottom: 2rem;
+    }
+    .connect-cards {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .connect-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem 1.6rem;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.88rem; transition: border-color 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .connect-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .newsletter-form { display: flex; gap: 0.8rem; max-width: 420px; margin: 0 auto; }
+    .newsletter-form input {
+      flex: 1; background: var(--card); border: 1px solid var(--border);
+      color: var(--text); padding: 10px 16px; border-radius: 6px;
+      font-size: 0.9rem; outline: none;
+      transition: border-color 0.2s;
+    }
+    .newsletter-form input:focus { border-color: var(--accent); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center; padding: 2rem;
+      font-size: 0.8rem; color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    footer span { color: var(--accent); }
+
+    /* ─── ADMIN MODAL ─── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2.5rem; width: 92%; max-width: 540px;
+      max-height: 88vh; overflow-y: auto; position: relative;
+    }
+    .modal h3 { font-size: 1.3rem; margin-bottom: 1.5rem; }
+    .modal-close {
+      position: absolute; top: 1.2rem; right: 1.2rem;
+      background: none; border: none; color: var(--muted);
+      font-size: 1.3rem; cursor: pointer; transition: color 0.2s;
+    }
+    .modal-close:hover { color: #ff4d4d; }
+    .modal-tabs { display: flex; gap: 0.6rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .modal-tab {
+      padding: 6px 14px; border-radius: 6px; font-size: 0.82rem;
+      border: 1px solid var(--border); background: none;
+      color: var(--muted); cursor: pointer; transition: all 0.2s;
+    }
+    .modal-tab.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label {
+      display: block; font-size: 0.78rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); padding: 10px 14px; border-radius: 6px;
+      font-size: 0.9rem; outline: none; font-family: var(--font);
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--accent); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .modal-submit {
+      width: 100%; padding: 12px; border-radius: 6px;
+      background: var(--accent); color: #000; border: none;
+      font-weight: 700; font-size: 0.95rem; cursor: pointer;
+      transition: background 0.2s; margin-top: 0.5rem;
+    }
+    .modal-submit:hover { background: #00c98a; }
+    .toast {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 300;
+      background: var(--accent); color: #000;
+      padding: 12px 24px; border-radius: 8px;
+      font-size: 0.88rem; font-weight: 600;
+      transform: translateY(60px); opacity: 0;
+      transition: all 0.3s;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .about-grid,
+      .edu-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; flex-direction: column; position: absolute;
+        top: 64px; left: 0; right: 0; background: var(--bg);
+        border-bottom: 1px solid var(--border); padding: 1rem 5%;
+        gap: 1rem;
+      }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      .hero-stats { gap: 1.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .newsletter-form { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
+<nav>
+  <div class="nav-logo">S<span>.</span>R</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#casestudies">Case Studies</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#connect">Connect</a></li>
+  </ul>
+  <button class="nav-admin-btn" onclick="openAdmin()">+ Add / Edit</button>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-badge">Open to MBA Internships & Full-Time Roles</div>
+    <h1 class="hero-name">
+      Sachidanandam<br><span class="highlight">Ramanathan</span>
+    </h1>
+    <p class="hero-hook">
+      Bridging engineering with modern marketing and sustainable systems — connecting data-driven product storytelling with real-world manufacturing precision.
+    </p>
+    <div class="hero-sub">
+      B.Tech Leather Technology, Anna University (CSIR-CLRI) &amp; MBA Aspirant in Marketing &amp; Sustainability — with hands-on product engineering and technical marketing experience at <strong>Tata / Calsea</strong> managing <strong>Puma &amp; Comet</strong>.
+    </div>
+    <div class="hero-cta-row">
+      <a href="#casestudies" class="btn-primary">View Case Studies</a>
+      <a href="#connect" class="btn-outline">Let's Connect</a>
+      <a href="mailto:sachidanandam@email.com" class="btn-outline">✉ Email Me</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">2+</span><span class="stat-label">Years Industry Exp.</span></div>
+      <div class="stat"><span class="stat-num">2</span><span class="stat-label">Global Brands Managed</span></div>
+      <div class="stat"><span class="stat-num">&lt;3%</span><span class="stat-label">Scrap Rate Achieved</span></div>
+      <div class="stat"><span class="stat-num">MBA</span><span class="stat-label">PSGIM 2026–28</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ ABOUT ═══════════════════════════════ -->
+<section id="about">
+  <div class="section-label">About Me</div>
+  <div class="divider"></div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        I'm <strong>Sachidanandam R</strong> — a product engineer turned marketing strategist, grounded in the precision of manufacturing and energised by the strategy of brand growth.
+      </p>
+      <p>
+        My career started on factory floors, dissecting every stitch, sole bond, and hide defect pattern at <strong>Tata / Calsea</strong> for global brands like Puma and Comet. That engineering rigour gave me something most marketers don't have: a systems-level understanding of <strong>how products actually come to life</strong>.
+      </p>
+      <p>
+        Now, as an <strong>MBA aspirant in Marketing &amp; Sustainability at PSGIM</strong>, I'm translating that technical depth into strategic marketing frameworks, sustainable supply chain models, and data-driven product narratives that resonate from boardroom to shop floor.
+      </p>
+      <p>
+        I build tools. I run marathons. I believe <strong>great marketing starts with deeply understanding what you're selling</strong> — not just how to sell it.
+      </p>
+      <div class="about-tags">
+        <span class="tag">Product Marketing</span>
+        <span class="tag">Sustainability Strategy</span>
+        <span class="tag">Supply Chain Analytics</span>
+        <span class="tag">UX Prototyping</span>
+        <span class="tag">DFMEA</span>
+        <span class="tag">Technical Marketing</span>
+      </div>
+    </div>
+    <div class="about-card">
+      <div class="about-card-item">
+        <span class="about-card-label">Current Role</span>
+        <span class="about-card-value">MBA Aspirant — Marketing &amp; Sustainability</span>
+      </div>
+      <div class="about-card-item">
+        <span class="about-card-label">Institution</span>
+        <span class="about-card-value">PSGIM, Coimbatore (2026–2028)</span>
+      </div>
+      <div class="about-card-item">
+        <span class="about-card-label">Background</span>
+        <span class="about-card-value">B.Tech Leather Technology, Anna University</span>
+      </div>
+      <div class="about-card-item">
+        <span class="about-card-label">Experience</span>
+        <span class="about-card-value">Tata / Calsea — Puma &amp; Comet Accounts</span>
+      </div>
+      <div class="about-card-item">
+        <span class="about-card-label">Location</span>
+        <span class="about-card-value">Chennai, Tamil Nadu, India</span>
+      </div>
+      <div class="about-card-item" style="margin-bottom:0">
+        <span class="about-card-label">Target Roles</span>
+        <span class="about-card-value">Product Marketing · Sustainability Strategy · SCM Analytics</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ SKILLS ═══════════════════════════════ -->
+<section id="skills">
+  <div class="section-label">Core Competencies</div>
+  <div class="section-title">Skills &amp; Toolkit</div>
+  <div class="divider"></div>
+  <div class="skills-grid" id="skillsGrid">
+    <div class="skill-card">
+      <div class="skill-card-icon">📊</div>
+      <div class="skill-card-title">Marketing &amp; Strategy</div>
+      <div class="skill-pill-list">
+        <span class="skill-pill">Technical Marketing</span>
+        <span class="skill-pill">User Research</span>
+        <span class="skill-pill">Sustainable Materials</span>
+        <span class="skill-pill">Market Analysis</span>
+        <span class="skill-pill">Product Positioning</span>
+        <span class="skill-pill">Go-to-Market</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">🔢</div>
+      <div class="skill-card-title">Analytics &amp; Systems</div>
+      <div class="skill-pill-list">
+        <span class="skill-pill">Power BI</span>
+        <span class="skill-pill">SQL</span>
+        <span class="skill-pill">Python</span>
+        <span class="skill-pill">Advanced Excel</span>
+        <span class="skill-pill">SCM Yield Analytics</span>
+        <span class="skill-pill">Dynamic ROP Optimization</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">🎨</div>
+      <div class="skill-card-title">Design &amp; Prototyping</div>
+      <div class="skill-pill-list">
+        <span class="skill-pill">Figma</span>
+        <span class="skill-pill">Adobe XD</span>
+        <span class="skill-pill">Photoshop</span>
+        <span class="skill-pill">AutoCAD</span>
+        <span class="skill-pill">Dimension CAD</span>
+        <span class="skill-pill">Shoemaster</span>
+        <span class="skill-pill">UX Wireframing</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">⚙️</div>
+      <div class="skill-card-title">Engineering &amp; Quality</div>
+      <div class="skill-pill-list">
+        <span class="skill-pill">DFMEA</span>
+        <span class="skill-pill">SOP Standardization</span>
+        <span class="skill-pill">SATRA Compliance</span>
+        <span class="skill-pill">Cut-to-Box QC</span>
+        <span class="skill-pill">BOM Management</span>
+        <span class="skill-pill">Pilot Trial Sign-off</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ CASE STUDIES ═══════════════════════════════ -->
+<section id="casestudies">
+  <div class="section-label">Featured Work</div>
+  <div class="section-title">Deep-Dive Case Studies</div>
+  <div class="divider"></div>
+
+  <!-- CASE STUDY 1 -->
+  <div class="case-study">
+    <span class="case-tag">Supply Chain · Analytics · Web App</span>
+    <h3>Uphopro — Digital Supply Chain &amp; Inventory Optimization Platform</h3>
+    <p class="case-meta">Personal Project · Wix Velo · 2024</p>
+    <div class="case-steps">
+      <div class="case-step">
+        <div class="case-step-label">Context</div>
+        <p>Upholstered manufacturing firms juggling heterogeneous leather hide defect clusters, polyurethane foam vs. imported cover lead-time gaps, and desynchronized cut-and-sew lines.</p>
+      </div>
+      <div class="case-step">
+        <div class="case-step-label">Problem</div>
+        <p>High floor congestion, excessive cutting scrap, decoupled procurement cycles, and assembly line takt time misalignment driving production inefficiency.</p>
+      </div>
+      <div class="case-step">
+        <div class="case-step-label">Approach</div>
+        <p>Formulated dynamic Reorder Points (ROP) with supplier lead-time variance modelling, 2D nesting yield optimization algorithms, and ABC-XYZ inventory matrix segmentation.</p>
+      </div>
+      <div class="case-step">
+        <div class="case-step-label">Solution</div>
+        <p>Designed a Wix Velo web application integrating raw material inventory tracking, BOM management, automated quote generation, and real-time kitting dashboards.</p>
+      </div>
+      <div class="case-step">
+        <div class="case-step-label">Impact</div>
+        <p>Reduced floor congestion, synchronized assembly kitting, and brought measurable operational gains to the production cycle.</p>
+      </div>
+    </div>
+    <div>
+      <span class="impact-badge">✅ Cutting Scrap &lt; 3%</span>
+      <span class="impact-badge">✅ Kitting Synchronized</span>
+      <span class="impact-badge">✅ Floor Congestion Reduced</span>
+    </div>
+  </div>
+
+  <!-- CASE STUDY 2 -->
+  <div class="case-study">
+    <span class="case-tag">Product Engineering · Quality · DFMEA</span>
+    <h3>Footwear Product Engineering &amp; DFMEA Implementation</h3>
+    <p class="case-meta">Tata / Calsea — Puma &amp; Comet Accounts · Graduate Engineer Trainee · 2023–2025</p>
+    <div class="case-steps">
+      <div class="case-step">
+        <div class="case-step-label">Context</div>
+        <p>Graduate Engineer Trainee &amp; Technical Marketing Liaison managing high-profile footwear brands Puma and Comet from technical design through mass production.</p>
+      </div>
+      <div class="case-step">
+        <div class="case-step-label">Problem</div>
+        <p>Pattern mismatches, sole delamination, and seam bursts were migrating from technical design phase into mass production, causing critical rejections and rework.</p>
+      </div>
+      <div class="case-step">
+        <div class="case-step-label">Approach</div>
+        <p>Built cross-functional DFMEA workflows connecting 2D/3D CAD design freeze, SATRA peel adhesion validation, and 3-gate pilot trial sign-off protocols.</p>
+      </div>
+      <div class="case-step">
+        <div class="case-step-label">Solution</div>
+        <p>Standardized SOPs across lasting and stitching lines, embedded quality gates at each production stage, and created a technical liaison bridge between design and manufacturing teams.</p>
+      </div>
+      <div class="case-step">
+        <div class="case-step-label">Impact</div>
+        <p>Eliminated critical bonding rejections, standardized cross-line production quality, and streamlined cut-to-box timelines for two international footwear brands.</p>
+      </div>
+    </div>
+    <div>
+      <span class="impact-badge">✅ Zero Critical Rejections</span>
+      <span class="impact-badge">✅ SOPs Standardized</span>
+      <span class="impact-badge">✅ Cut-to-Box Streamlined</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ EDUCATION ═══════════════════════════════ -->
+<section id="education">
+  <div class="section-label">Background</div>
+  <div class="section-title">Education &amp; Certifications</div>
+  <div class="divider"></div>
+  <div class="edu-grid" id="eduGrid">
+    <div class="edu-card">
+      <div class="edu-card-year">2026 – 2028 · Upcoming</div>
+      <h4>MBA — Marketing &amp; Sustainability</h4>
+      <p>PSG Institute of Management (PSGIM), Coimbatore<br>Focus: Sustainable Business Strategy &amp; Product Marketing</p>
+    </div>
+    <div class="edu-card">
+      <div class="edu-card-year">2021 – 2025</div>
+      <h4>B.Tech — Leather Technology</h4>
+      <p>Anna University (CSIR-CLRI), Chennai<br>Materials Engineering, Product Design, Supply Chain Systems</p>
+    </div>
+  </div>
+  <ul class="certs-list" id="certsList">
+    <li class="cert-item"><span class="cert-icon">🎓</span> Google UX Design Specialization — Coursera</li>
+    <li class="cert-item"><span class="cert-icon">🎓</span> AutoCAD Certified User</li>
+  </ul>
+</section>
+
+<!-- ═══════════════════════════════ ACHIEVEMENTS ═══════════════════════════════ -->
+<section id="achievements">
+  <div class="section-label">Leadership &amp; Recognition</div>
+  <div class="section-title">Achievements</div>
+  <div class="divider"></div>
+  <div class="achievements-grid" id="achievementsGrid">
+    <div class="achievement-card">
+      <div class="ach-icon">🏐</div>
+      <h4>University Volleyball Champion</h4>
+      <p>University-level inter-collegiate volleyball winner, demonstrating team leadership and competitive drive.</p>
+    </div>
+    <div class="achievement-card">
+      <div class="ach-icon">⚽</div>
+      <h4>University Football Winner</h4>
+      <p>Inter-collegiate football tournament winner, showcasing strategic thinking under pressure.</p>
+    </div>
+    <div class="achievement-card">
+      <div class="ach-icon">🏃</div>
+      <h4>Marathon Runner</h4>
+      <p>Consistent marathon participant, reflecting discipline, long-term goal-setting, and endurance.</p>
+    </div>
+    <div class="achievement-card">
+      <div class="ach-icon">🤝</div>
+      <h4>Community Service Team Lead</h4>
+      <p>Led a community service team, building stakeholder coordination and grassroots leadership skills.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ CONNECT ═══════════════════════════════ -->
+<section id="connect">
+  <div class="section-label">Daily Marketing Insights &amp; Collaboration</div>
+  <div class="section-title">Let's Connect</div>
+  <div class="divider" style="margin:0 auto 2rem;"></div>
+  <div class="connect-inner">
+    <p>
+      Follow along for <strong>daily strategic marketing breakdowns</strong> — from sustainable brand positioning to supply chain storytelling. Or connect directly to explore product marketing and sustainability roles.
+    </p>
+    <div class="connect-cards">
+      <a href="https://linkedin.com" target="_blank" class="connect-card" style="text-decoration:none;color:var(--text)">
+        <span>💼</span> LinkedIn
+      </a>
+      <a href="https://github.com" target="_blank" class="connect-card" style="text-decoration:none;color:var(--text)">
+        <span>🐙</span> GitHub
+      </a>
+      <a href="mailto:sachidanandam@email.com" class="connect-card" style="text-decoration:none;color:var(--text)">
+        <span>✉️</span> Email
+      </a>
+    </div>
+    <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+      <input type="email" placeholder="your@email.com" id="nlEmail" required />
+      <button type="submit" class="btn-primary">Subscribe</button>
+    </form>
+    <p style="font-size:0.78rem;margin-top:0.8rem;">Get weekly strategic marketing breakdowns. No spam, ever.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+<footer>
+  <p>Crafted with precision by <span>Sachidanandam R</span> · Chennai, India · 2025</p>
+  <p style="margin-top:0.3rem;">MBA Aspirant · Product Engineering · Sustainability Strategy</p>
+</footer>
+
+<!-- ═══════════════════════════════ TOAST ═══════════════════════════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════ ADMIN MODAL ═══════════════════════════════ -->
+<div class="modal-overlay" id="adminModal" onclick="closeOnOverlay(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAdmin()">✕</button>
+    <h3>⚡ Add / Update Portfolio</h3>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchTab('achievement')">Achievement</button>
+      <button class="modal-tab" onclick="switchTab('certification')">Certification</button>
+      <button class="modal-tab" onclick="switchTab('skill')">Skill</button>
+      <button class="modal-tab" onclick="switchTab('education')">Education</button>
+      <button class="modal-tab" onclick="switchTab('project')">Project</button>
+    </div>
+
+    <!-- Achievement -->
+    <div class="tab-panel active" id="tab-achievement">
+      <div class="form-group">
+        <label>Icon / Emoji</label>
+        <input type="text" id="ach-icon" placeholder="e.g. 🏆" maxlength="4" />
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="ach-title" placeholder="e.g. Best Paper Award — CLRI Symposium" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="ach-desc" placeholder="Brief description of the achievement..."></textarea>
+      </div>
+      <button class="modal-submit" onclick="addAchievement()">Add Achievement</button>
+    </div>
+
+    <!-- Certification -->
+    <div class="tab-panel" id="tab-certification">
+      <div class="form-group">
+        <label>Certification Name</label>
+        <input type="text" id="cert-name" placeholder="e.g. HubSpot Content Marketing" />
+      </div>
+      <div class="form-group">
+        <label>Issuing Body</label>
+        <input type="text" id="cert-body" placeholder="e.g. HubSpot Academy" />
+      </div>
+      <button class="modal-submit" onclick="addCertification()">Add Certification</button>
+    </div>
+
+    <!-- Skill -->
+    <div class="tab-panel" id="tab-skill">
+      <div class="form-group">
+        <label>Skill Category</label>
+        <select id="skill-cat">
+          <option value="0">Marketing &amp; Strategy</option>
+          <option value="1">Analytics &amp; Systems</option>
+          <option value="2">Design &amp; Prototyping</option>
+          <option value="3">Engineering &amp; Quality</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Skill Name</label>
+        <input type="text" id="skill-name" placeholder="e.g. Sustainability Reporting" />
+      </div>
+      <button class="modal-submit" onclick="addSkill()">Add Skill</button>
+    </div>
+
+    <!-- Education -->
+    <div class="tab-panel" id="tab-education">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Degree / Programme</label>
+          <input type="text" id="edu-degree" placeholder="e.g. PG Diploma — Data Analytics" />
+        </div>
+        <div class="form-group">
+          <label>Year</label>
+          <input type="text" id="edu-year" placeholder="e.g. 2028" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Institution</label>
+        <input type="text" id="edu-inst" placeholder="e.g. IIM Bangalore" />
+      </div>
+      <div class="form-group">
+        <label>Details / Specialization</label>
+        <input type="text" id="edu-detail" placeholder="e.g. Focus: Marketing Analytics" />
+      </div>
+      <button class="modal-submit" onclick="addEducation()">Add Education</button>
+    </div>
+
+    <!-- Project -->
+    <div class="tab-panel" id="tab-project">
+      <div class="form-group">
+        <label>Project Title</label>
+        <input type="text" id="proj-title" placeholder="e.g. Carbon Footprint Dashboard" />
+      </div>
+      <div class="form-group">
+        <label>Type / Tag</label>
+        <input type="text" id="proj-tag" placeholder="e.g. Sustainability · Data Viz" />
+      </div>
+      <div class="form-group">
+        <label>Problem Statement</label>
+        <textarea id="proj-problem" placeholder="What challenge did this solve?"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Approach &amp; Solution</label>
+        <textarea id="proj-solution" placeholder="How did you solve it?"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Key Impact / Result</label>
+        <input type="text" id="proj-impact" placeholder="e.g. 20% reduction in reporting time" />
+      </div>
+      <button class="modal-submit" onclick="addProject()">Add Case Study</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ JAVASCRIPT ═══════════════════════════════ -->
+<script>
+  /* ── NAV ── */
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  /* ── MODAL ── */
+  function openAdmin() { document.getElementById('adminModal').classList.add('open'); }
+  function closeAdmin() { document.getElementById('adminModal').classList.remove('open'); }
+  function closeOnOverlay(e) { if (e.target.id === 'adminModal') closeAdmin(); }
+
+  /* ── TABS ── */
+  function switchTab(name) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  /* ── ACHIEVEMENT ── */
+  function addAchievement() {
+    const icon  = document.getElementById('ach-icon').value.trim() || '🏆';
+    const title = document.getElementById('ach-title').value.trim();
+    const desc  = document.getElementById('ach-desc').value.trim();
+    if (!title) { alert('Please enter a title.'); return; }
+    const card = document.createElement('div');
+    card.className = 'achievement-card';
+    card.innerHTML = `
+      <button class="delete-btn" onclick="this.parentElement.remove()" title="Remove">✕</button>
+      <div class="ach-icon">${icon}</div>
+      <h4>${title}</h4>
+      <p>${desc}</p>`;
+    document.getElementById('achievementsGrid').appendChild(card);
+    ['ach-icon','ach-title','ach-desc'].forEach(id => document.getElementById(id).value = '');
+    showToast('Achievement added!');
+    closeAdmin();
+  }
+
+  /* ── CERTIFICATION ── */
+  function addCertification() {
+    const name = document.getElementById('cert-name').value.trim();
+    const body = document.getElementById('cert-body').value.trim();
+    if (!name) { alert('Please enter a certification name.'); return; }
+    const li = document.createElement('li');
+    li.className = 'cert-item';
+    li.innerHTML = `<span class="cert-icon">🎓</span> ${name}${body ? ' — ' + body : ''}
+      <button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;color:#ff4d4d;cursor:pointer;font-size:0.8rem;">✕</button>`;
+    li.style.display = 'flex'; li.style.alignItems = 'center';
+    document.getElementById('certsList').appendChild(li);
+    ['cert-name','cert-body'].forEach(id => document.getElementById(id).value = '');
+    showToast('Certification added!');
+    closeAdmin();
+  }
+
+  /* ── SKILL ── */
+  function addSkill() {
+    const cat   = parseInt(document.getElementById('skill-cat').value);
+    const skill = document.getElementById('skill-name').value.trim();
+    if (!skill) { alert('Please enter a skill name.'); return; }
+    const lists = document.querySelectorAll('#skillsGrid .skill-pill-list');
+    if (lists[cat]) {
+      const pill = document.createElement('span');
+      pill.className = 'skill-pill';
+      pill.textContent = skill;
+      lists[cat].appendChild(pill);
+    }
+    document.getElementById('skill-name').value = '';
+    showToast('Skill added!');
+    closeAdmin();
+  }
+
+  /* ── EDUCATION ── */
+  function addEducation() {
+    const degree = document.getElementById('edu-degree').value.trim();
+    const year   = document.getElementById('edu-year').value.trim();
+    const inst   = document.getElementById('edu-inst').value.trim();
+    const detail = document.getElementById('edu-detail').value.trim();
+    if (!degree) { alert('Please enter a degree or programme name.'); return; }
+    const card = document.createElement('div');
+    card.className = 'edu-card';
+    card.innerHTML = `
+      <div class="edu-card-year">${year}</div>
+      <h4>${degree}</h4>
+      <p>${inst}${detail ? '<br>' + detail : ''}</p>`;
+    document.getElementById('eduGrid').appendChild(card);
+    ['edu-degree','edu-year','edu-inst','edu-detail'].forEach(id => document.getElementById(id).value = '');
+    showToast('Education entry added!');
+    closeAdmin();
+  }
+
+  /* ── PROJECT / CASE STUDY ── */
+  function addProject() {
+    const title   = document.getElementById('proj-title').value.trim();
+    const tag     = document.getElementById('proj-tag').value.trim();
+    const problem = document.getElementById('proj-problem').value.trim();
+    const sol     = document.getElementById('proj-solution').value.trim();
+    const impact  = document.getElementById('proj-impact').value.trim();
+    if (!title) { alert('Please enter a project title.'); return; }
+    const cs = document.createElement('div');
+    cs.className = 'case-study';
+    cs.innerHTML = `
+      <span class="case-tag">${tag || 'Project'}</span>
+      <h3>${title}</h3>
+      <p class="case-meta">Added · ${new Date().getFullYear()}</p>
+      <div class="case-steps">
+        <div class="case-step"><div class="case-step-label">Problem</div><p>${problem || '—'}</p></div>
+        <div class="case-step"><div class="case-step-label">Solution</div><p>${sol || '—'}</p></div>
+      </div>
+      ${impact ? `<div><span class="impact-badge">✅ ${impact}</span></div>` : ''}`;
+    document.getElementById('casestudies').appendChild(cs);
+    ['proj-title','proj-tag','proj-problem','proj-solution','proj-impact']
+      .forEach(id => document.getElementById(id).value = '');
+    showToast('Case Study added!');
+    closeAdmin();
+  }
+
+  /* ── NEWSLETTER ── */
+  function subscribeNewsletter(e) {
+    e.preventDefault();
+    const email = document.getElementById('nlEmail').value;
+    showToast(`✅ Subscribed: ${email}`);
+    document.getElementById('nlEmail').value = '';
+  }
+
+  /* ── SCROLL ANIMATION ── */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll(
+    '.skill-card, .case-study, .edu-card, .achievement-card, .about-card'
+  ).forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
