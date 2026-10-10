@@ -1,1069 +1,342 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sachidanandam — Portfolio</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0a0a0a;
-      --surface: #111111;
-      --card: #181818;
-      --border: #2a2a2a;
-      --accent: #00e5a0;
-      --accent2: #7c6fff;
-      --text: #f0f0f0;
-      --muted: #888;
-      --font: 'Segoe UI', system-ui, sans-serif;
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
-
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: rgba(10,10,10,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 5%; height: 64px;
-    }
-    .nav-logo {
-      font-size: 1.1rem; font-weight: 700; letter-spacing: 0.05em;
-      cursor: pointer; user-select: none;
-    }
-    .nav-logo span { color: var(--accent); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a {
-      color: var(--muted); font-size: 0.85rem; letter-spacing: 0.08em;
-      text-transform: uppercase; transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--accent); text-decoration: none; }
-
-    .nav-admin-btn {
-      display: none;
-      background: transparent; border: 1px solid var(--accent);
-      color: var(--accent); padding: 6px 14px; border-radius: 4px;
-      font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
-    }
-    .nav-admin-btn:hover { background: var(--accent); color: #000; }
-    .nav-admin-btn.visible { display: inline-block; }
-
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
-    .hamburger span { width: 24px; height: 2px; background: var(--text); border-radius: 2px; }
-
-    section { padding: 100px 5%; }
-    .section-label {
-      font-size: 0.75rem; letter-spacing: 0.2em; color: var(--accent);
-      text-transform: uppercase; margin-bottom: 12px;
-    }
-    .section-title {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 700; line-height: 1.2; margin-bottom: 1.5rem;
-    }
-    .divider {
-      width: 48px; height: 3px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      border-radius: 2px; margin-bottom: 2.5rem;
-    }
-
-    /* ── HERO ── */
-    #hero {
-      min-height: 100vh;
-      display: flex; align-items: center;
-      padding-top: 80px;
-      position: relative; overflow: hidden;
-    }
-    .hero-grid-bg {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(0,229,160,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,229,160,0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-    }
-    .hero-layout {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 5rem;
-      align-items: center;
-      width: 100%;
-      max-width: 1200px;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-inner { max-width: 680px; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.2);
-      padding: 6px 16px; border-radius: 99px;
-      font-size: 0.78rem; color: var(--accent); margin-bottom: 1.5rem;
-      letter-spacing: 0.08em;
-    }
-    .hero-badge::before {
-      content: ''; width: 6px; height: 6px;
-      background: var(--accent); border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%,100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(1.4); }
-    }
-    .hero-name {
-      font-size: clamp(2.8rem, 6vw, 5rem);
-      font-weight: 800; line-height: 1.05;
-      letter-spacing: -0.02em;
-    }
-    .hero-name .highlight {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero-hook {
-      font-size: clamp(0.95rem, 2vw, 1.1rem);
-      color: var(--muted); max-width: 560px;
-      margin: 1.2rem 0 0.6rem; line-height: 1.6;
-    }
-    .hero-sub {
-      font-size: 0.88rem; color: var(--muted);
-      border-left: 2px solid var(--accent);
-      padding-left: 14px; margin: 1.5rem 0 2rem; line-height: 1.6;
-    }
-    .hero-cta-row { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .btn-primary {
-      background: var(--accent); color: #000;
-      padding: 12px 28px; border-radius: 6px;
-      font-weight: 700; font-size: 0.9rem;
-      transition: all 0.2s; border: none; cursor: pointer;
-    }
-    .btn-primary:hover { background: #00c98a; transform: translateY(-2px); text-decoration: none; color: #000; }
-    .btn-outline {
-      background: transparent; color: var(--text);
-      padding: 12px 28px; border-radius: 6px;
-      border: 1px solid var(--border); font-size: 0.9rem;
-      transition: all 0.2s; cursor: pointer;
-    }
-    .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); text-decoration: none; }
-    .hero-stats { display: flex; gap: 2.5rem; margin-top: 3rem; flex-wrap: wrap; }
-    .stat { display: flex; flex-direction: column; }
-    .stat-num { font-size: 1.8rem; font-weight: 800; color: var(--accent); line-height: 1; }
-    .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
-
-    /* ── PHOTO ── */
-    .hero-photo-wrap { display: flex; justify-content: center; align-items: center; }
-    .hero-photo-ring { position: relative; width: 340px; height: 340px; }
-    .hero-photo-glow {
-      position: absolute; inset: -12px; border-radius: 50%;
-      background: conic-gradient(var(--accent) 0%, var(--accent2) 40%, transparent 60%, var(--accent) 100%);
-      animation: spinGlow 4s linear infinite;
-      z-index: 0; filter: blur(2px);
-    }
-    @keyframes spinGlow {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-    .hero-photo-border {
-      position: absolute; inset: 6px; border-radius: 50%;
-      background: var(--bg); z-index: 1; overflow: hidden;
-      border: 3px solid var(--border);
-    }
-    .hero-photo-img {
-      width: 100%; height: 100%;
-      object-fit: cover; object-position: center top;
-      border-radius: 50%; display: block;
-      transition: transform 0.4s ease;
-    }
-    .hero-photo-img:hover { transform: scale(1.06); }
-
-    /* ── FLOATING BADGES ── */
-    .float-badge {
-      position: absolute;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 99px; padding: 7px 14px;
-      font-size: 0.75rem; color: var(--text);
-      white-space: nowrap; z-index: 3;
-      display: flex; align-items: center; gap: 6px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      animation: floatBob 3s ease-in-out infinite;
-      font-weight: 600;
-    }
-    .float-badge-1 { top: 0px; left: -75px; animation-delay: 0s; border-color: rgba(0,229,160,0.45); color: var(--accent); }
-    .float-badge-2 { bottom: 50px; right: -80px; animation-delay: 1.1s; border-color: rgba(124,111,255,0.45); color: var(--accent2); }
-    .float-badge-3 { bottom: -14px; left: 20px; animation-delay: 2s; border-color: rgba(0,229,160,0.35); color: var(--accent); }
-    @keyframes floatBob {
-      0%,100% { transform: translateY(0px); }
-      50%      { transform: translateY(-9px); }
-    }
-
-    /* ── ABOUT ── */
-    #about { background: var(--surface); }
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-    .about-text p { color: var(--muted); margin-bottom: 1rem; font-size: 0.97rem; }
-    .about-text p strong { color: var(--text); }
-    .about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
-    .tag {
-      background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.18);
-      color: var(--accent); padding: 4px 12px; border-radius: 99px;
-      font-size: 0.75rem; letter-spacing: 0.05em;
-    }
-    .about-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
-    .about-card-item { display: flex; flex-direction: column; margin-bottom: 1.5rem; }
-    .about-card-item:last-child { margin-bottom: 0; }
-    .about-card-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
-    .about-card-value { font-size: 0.97rem; color: var(--text); font-weight: 600; margin-top: 2px; }
-
-    /* ── SKILLS ── */
-    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
-    .skill-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.5rem;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-    .skill-card:hover { border-color: var(--accent); transform: translateY(-4px); }
-    .skill-card-icon { font-size: 1.6rem; margin-bottom: 0.8rem; }
-    .skill-card-title { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 1rem; }
-    .skill-pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .skill-pill {
-      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-      color: var(--muted); padding: 3px 10px; border-radius: 4px; font-size: 0.78rem;
-    }
-
-    /* ── CASE STUDIES ── */
-    #casestudies { background: var(--surface); }
-    .case-study {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 16px; padding: 2.5rem;
-      margin-bottom: 2rem; transition: border-color 0.2s; position: relative;
-    }
-    .case-study:hover { border-color: var(--accent2); }
-    .case-tag {
-      display: inline-block;
-      background: rgba(124,111,255,0.1); border: 1px solid rgba(124,111,255,0.3);
-      color: var(--accent2); padding: 4px 12px; border-radius: 99px;
-      font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem;
-    }
-    .case-study h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
-    .case-study .case-meta { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; }
-    .case-steps {
-      display: grid; gap: 1rem;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); margin-top: 1.5rem;
-    }
-    .case-step { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
-    .case-step-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); margin-bottom: 0.4rem; }
-    .case-step p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
-    .impact-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.25);
-      color: var(--accent); padding: 6px 14px; border-radius: 6px;
-      font-size: 0.82rem; font-weight: 600; margin-top: 1.2rem; margin-right: 0.5rem;
-    }
-
-    /* ── EDUCATION ── */
-    .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-    .edu-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.8rem;
-      transition: border-color 0.2s; position: relative;
-    }
-    .edu-card:hover { border-color: var(--accent); }
-    .edu-card-year { font-size: 0.72rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-    .edu-card h4 { font-size: 1rem; margin-bottom: 0.3rem; }
-    .edu-card p { font-size: 0.85rem; color: var(--muted); }
-    .certs-list { list-style: none; margin-top: 2rem; display: flex; flex-direction: column; gap: 0.8rem; }
-    .cert-item {
-      display: flex; align-items: center; gap: 12px;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 8px; padding: 0.9rem 1.2rem; font-size: 0.88rem;
-    }
-    .cert-icon { color: var(--accent); }
-
-    /* ── ACHIEVEMENTS ── */
-    .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.2rem; }
-    .achievement-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 1.4rem;
-      transition: border-color 0.2s, transform 0.2s; position: relative;
-    }
-    .achievement-card:hover { border-color: var(--accent2); transform: translateY(-3px); }
-    .achievement-card .ach-icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
-    .achievement-card h4 { font-size: 0.95rem; margin-bottom: 0.3rem; }
-    .achievement-card p { font-size: 0.82rem; color: var(--muted); }
-
-    /* ── DELETE BUTTON — hidden from everyone by default ── */
-    .delete-btn {
-      position: absolute; top: 10px; right: 10px;
-      background: none; border: none; color: #ff4d4d;
-      cursor: pointer; font-size: 0.85rem;
-      display: none;
-    }
-
-    /* ── CONNECT ── */
-    #connect { background: var(--surface); text-align: center; }
-    .connect-inner { max-width: 600px; margin: 0 auto; }
-    .connect-inner p { color: var(--muted); font-size: 0.97rem; margin-bottom: 2rem; }
-    .connect-cards { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2.5rem; }
-    .connect-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 1rem 1.6rem;
-      display: flex; align-items: center; gap: 10px;
-      font-size: 0.88rem; transition: border-color 0.2s, transform 0.2s;
-    }
-    .connect-card:hover { border-color: var(--accent); transform: translateY(-3px); }
-    .newsletter-form { display: flex; gap: 0.8rem; max-width: 420px; margin: 0 auto; }
-    .newsletter-form input {
-      flex: 1; background: var(--card); border: 1px solid var(--border);
-      color: var(--text); padding: 10px 16px; border-radius: 6px;
-      font-size: 0.9rem; outline: none; transition: border-color 0.2s;
-    }
-    .newsletter-form input:focus { border-color: var(--accent); }
-
-    footer {
-      text-align: center; padding: 2rem;
-      font-size: 0.8rem; color: var(--muted);
-      border-top: 1px solid var(--border);
-    }
-    footer span { color: var(--accent); }
-
-    /* ── MODALS ── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 200;
-      background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
-      align-items: center; justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 16px; padding: 2.5rem; width: 92%; max-width: 540px;
-      max-height: 88vh; overflow-y: auto; position: relative;
-    }
-    .modal h3 { font-size: 1.3rem; margin-bottom: 1.5rem; }
-    .modal-close {
-      position: absolute; top: 1.2rem; right: 1.2rem;
-      background: none; border: none; color: var(--muted);
-      font-size: 1.3rem; cursor: pointer; transition: color 0.2s;
-    }
-    .modal-close:hover { color: #ff4d4d; }
-    .modal-tabs { display: flex; gap: 0.6rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .modal-tab {
-      padding: 6px 14px; border-radius: 6px; font-size: 0.82rem;
-      border: 1px solid var(--border); background: none;
-      color: var(--muted); cursor: pointer; transition: all 0.2s;
-    }
-    .modal-tab.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-    .form-group { margin-bottom: 1.2rem; }
-    .form-group label {
-      display: block; font-size: 0.78rem; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;
-    }
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%; background: var(--surface); border: 1px solid var(--border);
-      color: var(--text); padding: 10px 14px; border-radius: 6px;
-      font-size: 0.9rem; outline: none; font-family: var(--font);
-      transition: border-color 0.2s;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus { border-color: var(--accent); }
-    .form-group textarea { resize: vertical; min-height: 80px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .modal-submit {
-      width: 100%; padding: 12px; border-radius: 6px;
-      background: var(--accent); color: #000; border: none;
-      font-weight: 700; font-size: 0.95rem; cursor: pointer;
-      transition: background 0.2s; margin-top: 0.5rem;
-    }
-    .modal-submit:hover { background: #00c98a; }
-
-    /* ── TOAST ── */
-    .toast {
-      position: fixed; bottom: 2rem; right: 2rem; z-index: 300;
-      background: var(--accent); color: #000;
-      padding: 12px 24px; border-radius: 8px;
-      font-size: 0.88rem; font-weight: 600;
-      transform: translateY(60px); opacity: 0; transition: all 0.3s;
-    }
-    .toast.show { transform: translateY(0); opacity: 1; }
-
-    /* ── SHAKE ── */
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      20%      { transform: translateX(-10px); }
-      40%      { transform: translateX(10px); }
-      60%      { transform: translateX(-8px); }
-      80%      { transform: translateX(8px); }
-    }
-    .shake { animation: shake 0.5s ease; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      .hero-layout { grid-template-columns: 1fr; text-align: center; gap: 2.5rem; }
-      .hero-photo-wrap { order: -1; }
-      .hero-photo-ring { width: 220px; height: 220px; }
-      .float-badge { display: none; }
-      .hero-cta-row { justify-content: center; }
-      .hero-stats { justify-content: center; }
-      .hero-sub { border-left: none; border-top: 2px solid var(--accent); padding: 12px 0 0; margin-top: 1rem; }
-      .hero-inner { max-width: 100%; }
-    }
-    @media (max-width: 768px) {
-      .about-grid, .edu-grid { grid-template-columns: 1fr; }
-      .nav-links {
-        display: none; flex-direction: column; position: absolute;
-        top: 64px; left: 0; right: 0; background: var(--bg);
-        border-bottom: 1px solid var(--border); padding: 1rem 5%; gap: 1rem;
-      }
-      .nav-links.open { display: flex; }
-      .hamburger { display: flex; }
-      .form-row { grid-template-columns: 1fr; }
-      .newsletter-form { flex-direction: column; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#06080a">
+<title>Sachidanandam — Product Engineer &amp; Sustainability Strategist | Coimbatore &amp; Chennai</title>
+<meta name="description" content="Portfolio of Sachidanandam: footwear product engineer (Puma &amp; Comet at Tata International) turning to sustainability-led marketing and supply-chain strategy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Manrope:wght@300;500;700&family=Noto+Sans+Tamil:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06080a;--ink:#ece8df;--mute:#8a8f8c;--acc:#00e5a0;--line:rgba(236,232,223,.16);--serif:"Cormorant Garamond",Georgia,serif;--sans:Manrope,system-ui,sans-serif;--tam:"Noto Sans Tamil",var(--sans);box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font:300 16px/1.7 var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:4px}
+#scene{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+.vig{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 35%,rgba(6,8,10,.85))}
+main,.top,footer{position:relative;z-index:2}
+section{min-height:100vh;padding:130px 6%;display:flex;flex-direction:column;justify-content:center}
+.k{font:700 11px var(--sans);letter-spacing:.3em;text-transform:uppercase;color:var(--acc);margin-bottom:22px;display:block}
+h2{font:400 clamp(44px,8vw,128px)/.92 var(--serif);letter-spacing:-.02em}
+h2 i{font-style:italic;color:var(--acc)}
+/* gate */
+.gate{position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center;transition:opacity 1.2s,visibility 1.2s}
+.gate.off{opacity:0;visibility:hidden}
+.gate .ta{font:500 clamp(40px,8vw,90px)/1 var(--tam);animation:fl 4s ease-in-out infinite}
+.gate .la{font:italic 400 clamp(36px,7vw,80px)/1 var(--serif);letter-spacing:.02em}
+.gate p{color:var(--mute);font-size:13px;letter-spacing:.2em;text-transform:uppercase}
+.gb{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.b{border:1px solid var(--ink);background:none;border-radius:99px;padding:15px 30px;cursor:pointer;font-weight:500;font-size:14px;letter-spacing:.06em;transition:background .3s,color .3s}
+.b:hover,.b.f{background:var(--ink);color:#000}
+.b.a{border-color:var(--acc);color:var(--acc)}.b.a:hover{background:var(--acc);color:#000}
+@keyframes fl{50%{transform:translateY(-8px);opacity:.8}}
+/* top */
+.top{position:fixed;inset:0 0 auto;display:flex;justify-content:space-between;align-items:center;padding:22px 6%;z-index:100;mix-blend-mode:difference;color:#fff}
+.logo{font:500 18px var(--tam);display:flex;gap:12px;align-items:baseline}.logo em{font:italic 400 20px var(--serif)}
+.nav{display:flex;gap:34px;align-items:center;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+.nav a{position:relative}.nav a:after{content:"";position:absolute;left:0;bottom:-4px;height:1px;width:100%;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .4s}.nav a:hover:after{transform:scaleX(1);transform-origin:left}
+.snd{background:none;border:0;display:flex;gap:3px;align-items:flex-end;height:18px;cursor:pointer}
+.snd i{width:2px;background:currentColor;height:100%;animation:eq 1s ease-in-out infinite}.snd i:nth-child(2){animation-delay:.2s}.snd i:nth-child(3){animation-delay:.45s}.snd i:nth-child(4){animation-delay:.1s}
+.snd.mute i{animation:none;height:3px}
+@keyframes eq{0%,100%{height:25%}50%{height:100%}}
+.ham{display:none;background:none;border:0;cursor:pointer;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+/* dots */
+.dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:14px}
+.dots a{width:9px;height:9px;border-radius:50%;border:1px solid var(--ink);display:block;position:relative;transition:background .3s,transform .3s}
+.dots a.on{background:var(--acc);border-color:var(--acc);transform:scale(1.5)}
+.dots a span{position:absolute;right:20px;top:-6px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:0;white-space:nowrap;transition:opacity .3s;pointer-events:none}.dots a:hover span{opacity:1}
+/* hero */
+#intro{text-align:center;align-items:center;padding-top:100px;position:relative}
+.cities{position:absolute;inset:50% 6% auto;display:flex;justify-content:space-between;transform:translateY(-50%);pointer-events:none;font:italic 400 clamp(20px,3.4vw,52px)/1 var(--serif)}
+.cities small{display:block;font:300 11px var(--sans);letter-spacing:.25em;color:var(--mute);margin-top:10px;font-style:normal}
+.portal{position:relative;width:min(300px,62vw);aspect-ratio:3/4;border-radius:999px 999px 14px 14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 0 120px -20px rgba(0,229,160,.45);transform:perspective(900px) rotateY(var(--ry,0deg)) rotateX(var(--rx,0deg));transition:transform .2s;background:#10151a}
+.portal img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;filter:contrast(1.05) saturate(.9)}
+.portal:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(6,8,10,.7))}
+.nm{font:400 clamp(46px,12.5vw,220px)/.8 var(--serif);letter-spacing:-.04em;margin-top:-.32em;position:relative;z-index:2;mix-blend-mode:difference;color:#fff;white-space:nowrap}
+.nm .ln{display:inline-block;overflow:hidden;vertical-align:top}.nm .ln span{display:inline-block;transform:translateY(105%);transition:transform 1.4s cubic-bezier(.16,1,.3,1)}
+.go .nm .ln span{transform:none}
+.role{max-width:620px;margin-top:34px;color:#c9c6bd;font-size:clamp(14px,1.4vw,18px)}.role b{color:var(--ink);font-weight:500}
+.sc{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:12px}
+.sc:after{content:"";width:20px;height:34px;border:1px solid var(--mute);border-radius:12px;background:radial-gradient(circle at 50% 20%,var(--acc) 3px,transparent 4px);animation:ms 1.8s infinite}
+@keyframes ms{50%{background-position:0 14px}}
+/* about */
+.ab{display:grid;grid-template-columns:1.4fr 1fr;gap:6%;align-items:start;margin-top:50px}
+.big{font:400 clamp(26px,3.3vw,50px)/1.12 var(--serif)}.big .w{opacity:.15;transition:opacity .3s}.big .w.on{opacity:1}
+.facts{display:grid;gap:0;border-top:1px solid var(--line)}
+.facts div{padding:18px 0;border-bottom:1px solid var(--line)}.facts small{display:block;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}.facts b{font-weight:500}
+.chap{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:70px}
+.chap p{color:#b9b6ad;font-size:15px}.chap h3{font:italic 400 28px var(--serif);color:var(--ink);margin-bottom:10px}
+.stats{display:flex;gap:56px;margin-top:60px;flex-wrap:wrap}.stats b{display:block;font:400 clamp(48px,6vw,90px)/1 var(--serif);color:var(--acc)}.stats span{font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--mute)}
+/* works carousel */
+#works{padding-left:0;padding-right:0}#works .hd{padding:0 6%}
+.rail{display:flex;gap:44px;overflow-x:auto;scroll-snap-type:x mandatory;padding:60px 32vw;perspective:1400px;scrollbar-width:none;cursor:grab}
+.rail::-webkit-scrollbar{display:none}
+.pc{flex:none;width:min(520px,80vw);height:min(64vh,560px);scroll-snap-align:center;border:1px solid var(--line);border-radius:8px;background:linear-gradient(160deg,rgba(18,24,22,.88),rgba(8,10,10,.92));backdrop-filter:blur(8px);padding:34px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;transition:border-color .4s,box-shadow .4s;will-change:transform}
+.pc.c{border-color:var(--acc);box-shadow:0 0 90px -30px var(--acc)}
+.pc .n{position:absolute;right:20px;bottom:70px;font:400 150px/1 var(--serif);color:transparent;-webkit-text-stroke:1px rgba(236,232,223,.16);pointer-events:none}
+.pc .tg{font:700 10px var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--acc);max-width:70%}
+.pc h3{font:400 clamp(34px,4vw,52px)/1 var(--serif);margin:14px 0 10px}.pc p{color:#b9b6ad;font-size:14px}
+.bd{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 20px}.bd span{border:1px solid var(--line);border-radius:99px;padding:3px 12px;font-size:11px;color:#cfccc2}
+.ctl{display:flex;gap:12px;justify-content:center;margin-top:10px}
+.ctl .b{width:54px;height:54px;padding:0;font-size:20px}
+/* skills */
+.sk{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:60px}
+.sg{border-top:1px solid var(--line);padding-top:22px}.sg .ic{font-size:26px}.sg h3{font:italic 400 28px var(--serif);margin:12px 0 18px}
+.pl{display:flex;flex-wrap:wrap;gap:8px}.pl span{border:1px solid var(--line);border-radius:99px;padding:4px 13px;font-size:12px;color:#c3c0b6;transition:background .3s,color .3s,border-color .3s}.pl span:hover{background:var(--acc);color:#000;border-color:var(--acc)}
+/* education */
+.ed{margin-top:60px}.er{display:grid;grid-template-columns:200px 1fr 1fr;gap:30px;padding:34px 0;border-top:1px solid var(--line);align-items:baseline;position:relative}
+.er:last-of-type{border-bottom:1px solid var(--line)}.er time{font:700 11px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--acc)}.er h3{font:400 clamp(26px,3vw,42px)/1.05 var(--serif)}.er p{color:#b9b6ad;font-size:14px}
+.ce{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}.ce span{border:1px solid var(--line);border-radius:6px;padding:12px 18px;font-size:14px;position:relative}
+/* achievements */
+.ac{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:60px}
+.ach{border:1px solid var(--line);border-radius:8px;padding:30px;position:relative;background:rgba(10,14,13,.7);backdrop-filter:blur(6px);transition:transform .5s cubic-bezier(.16,1,.3,1),border-color .3s}
+.ach:hover{transform:translateY(-12px) rotateX(4deg);border-color:var(--acc)}.ach .ic{font-size:34px;margin-bottom:18px}.ach h3{font:400 24px/1.1 var(--serif);margin-bottom:10px}.ach p{font-size:13px;color:#b9b6ad}
+/* connect */
+#connect{text-align:center;align-items:center}
+.cl{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin:46px 0 22px}
+.big-cta{font:400 clamp(30px,6vw,92px)/1 var(--serif);border-bottom:1px solid var(--acc);margin-top:20px;transition:color .3s}.big-cta:hover{color:var(--acc)}
+footer{padding:30px 6% 40px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--mute);letter-spacing:.08em;border-top:1px solid var(--line)}
+/* cursor */
+.cur{position:fixed;left:0;top:0;width:42px;height:42px;margin:-21px;border:1px solid var(--ink);border-radius:50%;pointer-events:none;z-index:400;mix-blend-mode:difference;display:none;align-items:center;justify-content:center;font-size:10px;letter-spacing:.14em;text-transform:uppercase;transition:width .3s,height .3s,margin .3s,background .3s;color:#000}
+.cur.h{width:78px;height:78px;margin:-39px;background:#fff}
+@media(pointer:fine){.cur{display:flex}}
+/* modals */
+.ov{position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.88);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center}.ov.open{display:flex}
+.md{background:#0c100f;border:1px solid var(--line);border-radius:12px;padding:38px;width:92%;max-width:760px;max-height:88vh;overflow:auto;position:relative}
+.md h3{font:400 34px/1.1 var(--serif);margin-bottom:6px}.md .x{position:absolute;right:18px;top:14px;background:none;border:0;font-size:22px;cursor:pointer;color:var(--mute)}
+.st{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:22px}.st div{border:1px solid var(--line);border-radius:8px;padding:16px}.st b{display:block;font:700 10px var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}.st p{font-size:13px;color:#b9b6ad}
+.fg{margin-bottom:14px}.fg label{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-bottom:5px}
+.fg input,.fg textarea,.fg select{width:100%;background:#06080a;border:1px solid var(--line);color:var(--ink);padding:10px 14px;border-radius:6px;font:inherit;font-size:14px}
+.tb{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.tb .b{padding:7px 16px;font-size:12px}
+.del{position:absolute;top:8px;right:10px;background:none;border:0;color:#ff5c5c;cursor:pointer;display:none}.adm .del{display:block}
+.adminbtn{display:none}.adm .adminbtn{display:inline-flex}
+.toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,80px);background:var(--acc);color:#000;padding:12px 24px;border-radius:99px;font-weight:700;font-size:13px;z-index:500;opacity:0;transition:.4s}.toast.show{transform:translate(-50%,0);opacity:1}
+.rv{opacity:0;transform:translateY(46px);transition:opacity 1s,transform 1s cubic-bezier(.16,1,.3,1)}.rv.in{opacity:1;transform:none}
+@media(max-width:900px){.ab,.chap,.er{grid-template-columns:1fr}.sk,.ac{grid-template-columns:1fr 1fr}.nav{display:none;position:fixed;inset:0;background:var(--bg);flex-direction:column;justify-content:center;font-size:22px;mix-blend-mode:normal}.nav.open{display:flex}.ham{display:block}.dots{display:none}.cities{display:none}.rail{padding:50px 10vw}}
+@media(max-width:560px){.sk,.ac{grid-template-columns:1fr}section{padding:110px 6% 80px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}.rv,.nm .ln span{opacity:1;transform:none}.big .w{opacity:1}}
+</style>
 </head>
 <body>
+<canvas id="scene" aria-hidden="true"></canvas><div class="vig"></div><div class="cur" id="cur"></div>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo" id="navLogo">S<span>.</span>R</div>
-  <ul class="nav-links" id="navLinks">
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#casestudies">Case Studies</a></li>
-    <li><a href="#education">Education</a></li>
-    <li><a href="#achievements">Achievements</a></li>
-    <li><a href="#connect">Connect</a></li>
-  </ul>
-  <!-- Completely hidden — only appears after secret unlock -->
-  <button class="nav-admin-btn" id="adminBtn" onclick="openAdmin()">+ Add / Edit</button>
-  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-    <span></span><span></span><span></span>
-  </div>
-</nav>
+<div class="gate" id="gate" role="dialog" aria-label="Welcome">
+  <div class="ta">சச்சிதானந்தம்</div><div class="la">Sachidanandam</div>
+  <p>Product engineering · Sustainability · Supply chain</p>
+  <div class="gb"><button class="b f" id="gOn">Click to enable sound</button><button class="b" id="gOff">Continue without sound</button></div>
+</div>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-grid-bg"></div>
-  <div class="hero-layout">
-    <div class="hero-inner">
-      <div class="hero-badge">Open to MBA Internships &amp; Full-Time Roles</div>
-      <h1 class="hero-name"><span class="highlight">Sachidanandam</span></h1>
-      <p class="hero-hook">
-        Bridging engineering with modern marketing and sustainable systems — connecting data-driven product storytelling with real-world manufacturing precision.
-      </p>
-      <div class="hero-sub">
-        B.Tech in Leather Technology, Anna University (CSIR-CLRI) — with hands-on product engineering &amp; technical marketing experience at <strong>Tata International Limited</strong> managing <strong>Puma &amp; Comet</strong>.
-      </div>
-      <div class="hero-cta-row">
-        <a href="#casestudies" class="btn-primary">View Case Studies</a>
-        <a href="#connect" class="btn-outline">Let's Connect</a>
-        <a href="mailto:sachidanandam@email.com" class="btn-outline">✉ Email Me</a>
-      </div>
-      <div class="hero-stats">
-        <div class="stat"><span class="stat-num">1+</span><span class="stat-label">Year Industry Exp.</span></div>
-        <div class="stat"><span class="stat-num">3+</span><span class="stat-label">New Customers Acquired</span></div>
-        <div class="stat"><span class="stat-num">2</span><span class="stat-label">Global Brands Managed</span></div>
-      </div>
-    </div>
-    <div class="hero-photo-wrap">
-      <div class="hero-photo-ring">
-        <div class="hero-photo-glow"></div>
-        <div class="hero-photo-border">
-          <img
-            src="https://res.cloudinary.com/tk7tyzv0/image/upload/v1787995109/IMG_20260829_135840.jpg"
-            alt="Sachidanandam"
-            class="hero-photo-img"
-            onerror="this.onerror=null; this.src='https://res.cloudinary.com/tk7tyzv0/image/upload/v1787995109/IMG_20260829_135840.jpg';"
-          />
-        </div>
-        <div class="float-badge float-badge-1">⚙️ Product Engineer</div>
-        <div class="float-badge float-badge-2">📊 Marketing Strategist</div>
-        <div class="float-badge float-badge-3">🌱 Sustainability</div>
-      </div>
-    </div>
-  </div>
+<header class="top">
+  <a class="logo" href="#intro" data-s><span>சச்சிதானந்தம்</span><em>S.R</em></a>
+  <nav class="nav" id="nav"><a href="#works" data-s>Works</a><a href="#about" data-s>About</a><a href="#skills" data-s>Toolkit</a><a href="#connect" data-s>Contact</a><button class="b adminbtn" id="adminBtn" style="padding:7px 16px;font-size:11px">+ Edit</button><button class="snd" id="snd" aria-label="Toggle sound"><i></i><i></i><i></i><i></i></button></nav>
+  <button class="ham" id="ham" aria-label="Menu">Menu</button>
+</header>
+<nav class="dots" id="dots" aria-label="Sections"></nav>
+
+<main>
+<section id="intro">
+  <div class="cities"><div>Coimbatore<small>11.0168° N · 76.9558° E</small></div><div style="text-align:right">Chennai<small>13.0827° N · 80.2707° E</small></div></div>
+  <div class="portal" id="portal"><img src="https://res.cloudinary.com/tk7tyzv0/image/upload/v1787995109/IMG_20260829_135840.jpg" alt="Portrait of Sachidanandam" onerror="this.style.display='none'"></div>
+  <h1 class="nm" aria-label="Sachidanandam"><span class="ln"><span>Sachidanandam</span></span></h1>
+  <p class="role"><b>Footwear product engineer</b> turning to sustainability-led marketing and supply-chain strategy. Two global brands, one MBA ahead.</p>
+  <div class="sc">Scroll to start exploring</div>
 </section>
 
-<!-- ABOUT -->
 <section id="about">
-  <div class="section-label">About Me</div>
-  <div class="divider"></div>
-  <div class="about-grid">
-    <div class="about-text">
-      <p>I'm <strong>Sachidanandam</strong> — a product engineer turned marketing strategist, grounded in the precision of manufacturing and energised by the strategy of brand growth.</p>
-      <p>My career started on factory floors, dissecting every stitch, sole bond, and hide defect pattern at <strong>Tata International Limited</strong> for global brands like Puma and Comet. That engineering rigour gave me something most marketers don't have: a systems-level understanding of <strong>how products actually come to life</strong>.</p>
-      <p>Now, as an <strong>MBA aspirant in Marketing &amp; Sustainability at PSGIM</strong>, I'm translating that technical depth into strategic marketing frameworks, sustainable supply chain models, and data-driven product narratives.</p>
-      <p>I build tools. I run marathons. I believe <strong>great marketing starts with deeply understanding what you're selling</strong> — not just how to sell it.</p>
-      <div class="about-tags">
-        <span class="tag">Product Marketing</span>
-        <span class="tag">Sustainability Strategy</span>
-        <span class="tag">Supply Chain Analytics</span>
-        <span class="tag">UX design</span>
-        <span class="tag">DFMEA</span>
-        <span class="tag">Technical Marketing</span>
-      </div>
-    </div>
-    <div class="about-card">
-      <div class="about-card-item">
-        <span class="about-card-label">Current Role</span>
-        <span class="about-card-value">MBA Aspirant — Marketing &amp; Sustainability</span>
-      </div>
-      <div class="about-card-item">
-        <span class="about-card-label">Institution</span>
-        <span class="about-card-value">PSGIM, Coimbatore (2026–2028)</span>
-      </div>
-      <div class="about-card-item">
-        <span class="about-card-label">Background</span>
-        <span class="about-card-value">B.Tech Leather Technology, Anna University</span>
-      </div>
-      <div class="about-card-item">
-        <span class="about-card-label">Experience</span>
-        <span class="about-card-value">Tata International Limited — Puma &amp; Comet</span>
-      </div>
-      <div class="about-card-item">
-        <span class="about-card-label">Location</span>
-        <span class="about-card-value">Coimbatore, Tamil Nadu, India</span>
-      </div>
-      <div class="about-card-item" style="margin-bottom:0">
-        <span class="about-card-label">Target Roles</span>
-        <span class="about-card-value">Product Marketing · Sustainability Strategy</span>
-      </div>
+  <span class="k rv">About</span>
+  <h2 class="rv">From the factory floor <i>to the boardroom.</i></h2>
+  <div class="ab">
+    <p class="big" id="man">I started on production lines, reading hide defects, sole bonds and seam stress the way others read spreadsheets. Now I am taking that systems-level understanding into marketing and sustainable supply chains, because the best story about a product starts with knowing exactly how it is made.</p>
+    <div class="facts rv">
+      <div><small>Now</small><b>MBA aspirant, Marketing &amp; Sustainability</b></div>
+      <div><small>Programme</small><b>PSGIM, Coimbatore · 2026–2028</b></div>
+      <div><small>Background</small><b>B.Tech Leather Technology, Anna University (CSIR-CLRI)</b></div>
+      <div><small>Industry</small><b>Tata International: Puma &amp; Comet</b></div>
+      <div><small>Looking for</small><b>Product marketing · Sustainability strategy · Supply-chain roles</b></div>
     </div>
   </div>
+  <div class="chap">
+    <div class="rv"><h3>The maker’s eye</h3><p>At Tata International I managed footwear for Puma and Comet from technical design to mass production: pattern mismatches, sole detachment and seam bursts, caught before they reached the line, through DFMEA and gated trials.</p></div>
+    <div class="rv"><h3>The systems view</h3><p>I standardised SOPs across lasting and stitching, tied CAD design freeze to adhesion validation, and built Uphopro to model inventory, cutting yield and supplier lead times for upholstery manufacturers.</p></div>
+    <div class="rv"><h3>The next chapter</h3><p>Sustainable materials, honest product storytelling and data-driven supply chains. The MBA is where I join engineering rigour to brand and business strategy.</p></div>
+  </div>
+  <div class="stats"><div class="rv"><b data-n="1" data-p="+">0</b><span>Year in industry</span></div><div class="rv"><b data-n="3" data-p="+">0</b><span>New customers acquired</span></div><div class="rv"><b data-n="2">0</b><span>Global brands managed</span></div></div>
 </section>
 
-<!-- SKILLS -->
+<section id="works">
+  <div class="hd"><span class="k rv">Featured projects</span><h2 class="rv">Selected <i>works.</i></h2></div>
+  <div class="rail" id="rail"></div>
+  <div class="ctl"><button class="b" id="prev" aria-label="Previous project" data-s>←</button><button class="b" id="next" aria-label="Next project" data-s>→</button></div>
+</section>
+
 <section id="skills">
-  <div class="section-label">Core Competencies</div>
-  <div class="section-title">Skills &amp; Toolkit</div>
-  <div class="divider"></div>
-  <div class="skills-grid" id="skillsGrid">
-    <div class="skill-card">
-      <div class="skill-card-icon">📊</div>
-      <div class="skill-card-title">Marketing &amp; Strategy</div>
-      <div class="skill-pill-list">
-        <span class="skill-pill">Technical Marketing</span>
-        <span class="skill-pill">User Research</span>
-        <span class="skill-pill">Sustainable Materials</span>
-        <span class="skill-pill">Market Analysis</span>
-        <span class="skill-pill">Product Positioning</span>
-        <span class="skill-pill">Go-to-Market</span>
-      </div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-card-icon">🔢</div>
-      <div class="skill-card-title">Analytics &amp; Systems</div>
-      <div class="skill-pill-list">
-        <span class="skill-pill">Power BI</span>
-        <span class="skill-pill">SQL</span>
-        <span class="skill-pill">Python</span>
-        <span class="skill-pill">Advanced Excel</span>
-      </div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-card-icon">🎨</div>
-      <div class="skill-card-title">Design &amp; Prototyping</div>
-      <div class="skill-pill-list">
-        <span class="skill-pill">Figma</span>
-        <span class="skill-pill">Adobe XD</span>
-        <span class="skill-pill">Photoshop</span>
-        <span class="skill-pill">AutoCAD</span>
-        <span class="skill-pill">Dimension CAD</span>
-        <span class="skill-pill">Shoemaster</span>
-      </div>
-    </div>
-    <div class="skill-card">
-      <div class="skill-card-icon">⚙️</div>
-      <div class="skill-card-title">Engineering &amp; Quality</div>
-      <div class="skill-pill-list">
-        <span class="skill-pill">DFMEA</span>
-        <span class="skill-pill">SOP Standardization</span>
-        <span class="skill-pill">Workflow optimization</span>
-        <span class="skill-pill">Process sequence</span>
-        <span class="skill-pill">Ensuring downstream process</span>
-        <span class="skill-pill">Trial Sign-off</span>
-      </div>
-    </div>
-  </div>
+  <span class="k rv">Core competencies</span><h2 class="rv">Skills &amp; <i>toolkit.</i></h2>
+  <div class="sk" id="skGrid"></div>
 </section>
 
-<!-- CASE STUDIES -->
-<section id="casestudies">
-  <div class="section-label">Featured Work</div>
-  <div class="section-title">Deep-Dive Case Studies</div>
-  <div class="divider"></div>
-  <div class="case-study">
-    <span class="case-tag">Supply Chain · Analytics · Web App</span>
-    <h3>Uphopro — Digital Supply Chain &amp; Inventory Optimization Platform</h3>
-    <p class="case-meta">Personal Project · Wix Velo · 2026</p>
-    <div class="case-steps">
-      <div class="case-step"><div class="case-step-label">Context</div><p>Upholstered manufacturing firms juggling heterogeneous leather hide defect clusters, polyurethane foam vs. imported cover lead-time gaps.</p></div>
-      <div class="case-step"><div class="case-step-label">Problem</div><p>High floor congestion, excessive cutting scrap, decoupled procurement cycles, and assembly line takt time misalignment driving production inefficiency.</p></div>
-      <div class="case-step"><div class="case-step-label">Approach</div><p>Formulated dynamic Reorder Points (ROP) with supplier lead-time variance modelling, 2D nesting yield optimization, and ABC-XYZ inventory matrix segmentation.</p></div>
-      <div class="case-step"><div class="case-step-label">Solution</div><p>Designed a Wix web application integrating raw material inventory tracking, BOM management, automated quote generation, and B2B Customer connection.</p></div>
-      <div class="case-step"><div class="case-step-label">Impact</div><p>Reduced floor congestion, synchronized assembly kitting, and brought measurable operational gains to the production cycle.</p></div>
-    </div>
-    <div>
-      <span class="impact-badge">✅ Cutting Scrap &lt; 3%</span>
-      <span class="impact-badge">✅ B2B Synchronized</span>
-      <span class="impact-badge">✅ Optimized Inventory &amp; Dedicated Web Service</span>
-    </div>
-  </div>
-  <div class="case-study">
-    <span class="case-tag">Product Engineering · Quality · DFMEA</span>
-    <h3>Footwear Product Engineering &amp; DFMEA Implementation</h3>
-    <p class="case-meta">Tata International Limited — Puma &amp; Comet · Graduate Engineer Trainee · 2025–2026</p>
-    <div class="case-steps">
-      <div class="case-step"><div class="case-step-label">Context</div><p>Graduate Engineer Trainee managing high-profile footwear brands Puma and Comet from technical design through mass production at Tata International Limited.</p></div>
-      <div class="case-step"><div class="case-step-label">Problem</div><p>Pattern mismatches, sole detachment, and seam bursts were migrating from technical design phase into mass production, causing critical rejections and rework.</p></div>
-      <div class="case-step"><div class="case-step-label">Approach</div><p>Built cross-functional DFMEA workflows connecting 2D/3D CAD design freeze, SATRA peel adhesion validation, and 3-gate pilot trial sign-off protocols.</p></div>
-      <div class="case-step"><div class="case-step-label">Solution</div><p>Standardized SOPs across lasting and stitching lines, embedded quality gates at each production stage, creating a technical bridge between design and manufacturing.</p></div>
-      <div class="case-step"><div class="case-step-label">Impact</div><p>Eliminated critical bonding rejections, standardized cross-line production quality, and streamlined cut-to-box timelines for two international footwear brands.</p></div>
-    </div>
-    <div>
-      <span class="impact-badge">✅ Better Downstream Outcome</span>
-      <span class="impact-badge">✅ SOPs Standardized</span>
-      <span class="impact-badge">✅ Cut-to-Box Streamlined</span>
-    </div>
-  </div>
-</section>
-
-<!-- EDUCATION -->
 <section id="education">
-  <div class="section-label">Background</div>
-  <div class="section-title">Education &amp; Certifications</div>
-  <div class="divider"></div>
-  <div class="edu-grid" id="eduGrid">
-    <div class="edu-card">
-      <div class="edu-card-year">2026 – 2028 · Upcoming</div>
-      <h4>MBA — Marketing &amp; Sustainability</h4>
-      <p>PSG Institute of Management (PSGIM), Coimbatore<br>Focus: Sustainable Business Strategy &amp; Product Marketing</p>
-    </div>
-    <div class="edu-card">
-      <div class="edu-card-year">2021 – 2025</div>
-      <h4>B.Tech — Leather Technology</h4>
-      <p>Anna University (CSIR-CLRI), Guindy-Chennai<br>Materials Engineering, Product Design, Merchandising</p>
-    </div>
-  </div>
-  <ul class="certs-list" id="certsList">
-    <li class="cert-item"><span class="cert-icon">🎓</span> Google UX Design Specialization — Coursera</li>
-    <li class="cert-item"><span class="cert-icon">🎓</span> AutoCAD Certified User</li>
-  </ul>
+  <span class="k rv">Background</span><h2 class="rv">Education &amp; <i>certifications.</i></h2>
+  <div class="ed" id="edGrid"></div>
+  <div class="ce" id="ceList"></div>
 </section>
 
-<!-- ACHIEVEMENTS -->
 <section id="achievements">
-  <div class="section-label">Leadership &amp; Recognition</div>
-  <div class="section-title">Achievements</div>
-  <div class="divider"></div>
-  <div class="achievements-grid" id="achievementsGrid">
-    <div class="achievement-card">
-      <div class="ach-icon">🏐</div>
-      <h4>University Volleyball Champion</h4>
-      <p>University-level inter-collegiate volleyball winner, demonstrating team leadership and competitive drive.</p>
-    </div>
-    <div class="achievement-card">
-      <div class="ach-icon">⚽</div>
-      <h4>University Football Winner</h4>
-      <p>Inter-collegiate football tournament winner, showcasing strategic thinking under pressure.</p>
-    </div>
-    <div class="achievement-card">
-      <div class="ach-icon">🏃</div>
-      <h4>Marathon Runner</h4>
-      <p>Consistent marathon participant, reflecting discipline, long-term goal-setting, and endurance.</p>
-    </div>
-    <div class="achievement-card">
-      <div class="ach-icon">🌱</div>
-      <h4>NSS — School Restoration &amp; Sustainability</h4>
-      <p>Led NSS activities including school restoration drives and sustainable community initiatives.</p>
-    </div>
-  </div>
+  <span class="k rv">Leadership &amp; recognition</span><h2 class="rv">Beyond <i>the desk.</i></h2>
+  <div class="ac" id="acGrid"></div>
 </section>
 
-<!-- CONNECT -->
 <section id="connect">
-  <div class="section-label">Daily Marketing Insights &amp; Collaboration</div>
-  <div class="section-title">Let's Connect</div>
-  <div class="divider" style="margin:0 auto 2rem;"></div>
-  <div class="connect-inner">
-    <p>Follow along for <strong>daily strategic marketing breakdowns</strong> — from sustainable brand positioning to supply chain storytelling. Or connect directly to explore product marketing and sustainability roles.</p>
-    <div class="connect-cards">
-      <a href="https://linkedin.com" target="_blank" class="connect-card" style="text-decoration:none;color:var(--text)"><span>💼</span> LinkedIn</a>
-      <a href="https://github.com" target="_blank" class="connect-card" style="text-decoration:none;color:var(--text)"><span>🐙</span> GitHub</a>
-      <a href="mailto:sachidanandam@email.com" class="connect-card" style="text-decoration:none;color:var(--text)"><span>✉️</span> Email</a>
-    </div>
-    <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
-      <input type="email" placeholder="your@email.com" id="nlEmail" required />
-      <button type="submit" class="btn-primary">Subscribe</button>
-    </form>
-    <p style="font-size:0.78rem;margin-top:0.8rem;">Get weekly strategic marketing breakdowns. No spam, ever.</p>
+  <span class="k rv">Let’s connect</span>
+  <h2 class="rv">Have a product, <i>a supply chain, a story?</i></h2>
+  <a class="big-cta rv" href="mailto:anandamsachin@gmail.com" data-s data-c="Write">anandamsachin@gmail.com</a>
+  <div class="cl rv">
+    <a class="b a" href="https://www.linkedin.com/in/sachidanandam-r-63061822b/" target="_blank" rel="noopener" data-s>LinkedIn</a>
+    <a class="b" href="https://github.com/sachidanandam0007" target="_blank" rel="noopener" data-s>GitHub</a>
+    <a class="b" href="https://wa.me/918637409160" target="_blank" rel="noopener" data-s>WhatsApp</a>
+    <a class="b" href="https://www.instagram.com/s_x_c_x_i_x" target="_blank" rel="noopener" data-s>Instagram</a>
   </div>
 </section>
+</main>
+<footer><span>Crafted by Sachidanandam · Coimbatore &amp; Chennai · 2026</span><span>Product engineering · Sustainability · Supply chain</span></footer>
 
-<!-- FOOTER -->
-<footer>
-  <p>Crafted with precision by <span>Sachidanandam</span> · Coimbatore, Tamil Nadu · 2026</p>
-  <p style="margin-top:0.3rem;">MBA Aspirant · Product Engineering · Sustainability Strategy</p>
-</footer>
-
+<!-- case study modal -->
+<div class="ov" id="caseOv"><div class="md"><button class="x" data-close aria-label="Close">✕</button><span class="k" id="cTag"></span><h3 id="cTitle"></h3><p id="cMeta" style="color:var(--mute);font-size:13px"></p><div class="st" id="cSteps"></div><div class="bd" id="cBd" style="margin-top:20px"></div></div></div>
+<!-- password gate -->
+<div class="ov" id="pwOv"><div class="md" style="max-width:400px;text-align:center"><button class="x" data-close aria-label="Close">✕</button><h3>Admin access</h3><p style="color:var(--mute);font-size:13px;margin:6px 0 20px">Enter your password to continue.</p><div class="fg"><input type="password" id="pw" placeholder="Password" style="text-align:center" autocomplete="off"></div><p id="pwE" style="color:#ff5c5c;font-size:13px;display:none;margin-bottom:12px">Incorrect password.</p><button class="b f" id="pwGo" style="width:100%">Unlock</button></div></div>
+<!-- admin modal -->
+<div class="ov" id="adOv"><div class="md"><button class="x" data-close aria-label="Close">✕</button><h3>Add to portfolio</h3><div class="tb" id="adTabs"></div><div id="adForm"></div><button class="b f" id="adGo" style="width:100%">Add</button></div></div>
 <div class="toast" id="toast"></div>
 
-<!-- PASSWORD GATE -->
-<div class="modal-overlay" id="passwordOverlay" onclick="closePwOnOverlay(event)">
-  <div class="modal" id="passwordBox" style="max-width:400px; text-align:center;">
-    <button class="modal-close" onclick="closePasswordOverlay()">✕</button>
-    <div style="font-size:2.5rem; margin-bottom:1rem;">🔐</div>
-    <h3 style="margin-bottom:0.4rem;">Admin Access</h3>
-    <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1.5rem;">
-      Restricted area. Enter your password to continue.
-    </p>
-    <div class="form-group">
-      <input
-        type="password"
-        id="adminPasswordInput"
-        placeholder="Enter password"
-        style="text-align:center; letter-spacing:0.2em; font-size:1rem;"
-      />
-    </div>
-    <p id="pwError" style="display:none; color:#ff4d4d; font-size:0.82rem; margin-bottom:1rem;">
-      ❌ Incorrect password. Try again.
-    </p>
-    <button class="modal-submit" onclick="verifyPassword()">Unlock Panel</button>
-    <p style="font-size:0.75rem; color:var(--muted); margin-top:1.2rem;">
-      Only the portfolio owner has access.
-    </p>
-  </div>
-</div>
-
-<!-- ADMIN MODAL -->
-<div class="modal-overlay" id="adminModal" onclick="closeOnOverlay(event)">
-  <div class="modal">
-    <button class="modal-close" onclick="closeAdmin()">✕</button>
-    <h3>⚡ Add / Update Portfolio</h3>
-    <div class="modal-tabs">
-      <button class="modal-tab active" onclick="switchTab('achievement',this)">Achievement</button>
-      <button class="modal-tab" onclick="switchTab('certification',this)">Certification</button>
-      <button class="modal-tab" onclick="switchTab('skill',this)">Skill</button>
-      <button class="modal-tab" onclick="switchTab('education',this)">Education</button>
-      <button class="modal-tab" onclick="switchTab('project',this)">Project</button>
-    </div>
-    <div class="tab-panel active" id="tab-achievement">
-      <div class="form-group"><label>Icon / Emoji</label><input type="text" id="ach-icon" placeholder="🏆" maxlength="4"/></div>
-      <div class="form-group"><label>Title</label><input type="text" id="ach-title" placeholder="Achievement title"/></div>
-      <div class="form-group"><label>Description</label><textarea id="ach-desc" placeholder="Brief description..."></textarea></div>
-      <button class="modal-submit" onclick="addAchievement()">Add Achievement</button>
-    </div>
-    <div class="tab-panel" id="tab-certification">
-      <div class="form-group"><label>Certification Name</label><input type="text" id="cert-name" placeholder="e.g. HubSpot Content Marketing"/></div>
-      <div class="form-group"><label>Issuing Body</label><input type="text" id="cert-body" placeholder="e.g. HubSpot Academy"/></div>
-      <button class="modal-submit" onclick="addCertification()">Add Certification</button>
-    </div>
-    <div class="tab-panel" id="tab-skill">
-      <div class="form-group"><label>Skill Category</label>
-        <select id="skill-cat">
-          <option value="0">Marketing &amp; Strategy</option>
-          <option value="1">Analytics &amp; Systems</option>
-          <option value="2">Design &amp; Prototyping</option>
-          <option value="3">Engineering &amp; Quality</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Skill Name</label><input type="text" id="skill-name" placeholder="e.g. Sustainability Reporting"/></div>
-      <button class="modal-submit" onclick="addSkill()">Add Skill</button>
-    </div>
-    <div class="tab-panel" id="tab-education">
-      <div class="form-row">
-        <div class="form-group"><label>Degree / Programme</label><input type="text" id="edu-degree" placeholder="e.g. MBA"/></div>
-        <div class="form-group"><label>Year</label><input type="text" id="edu-year" placeholder="e.g. 2028"/></div>
-      </div>
-      <div class="form-group"><label>Institution</label><input type="text" id="edu-inst" placeholder="e.g. IIM Bangalore"/></div>
-      <div class="form-group"><label>Details / Specialization</label><input type="text" id="edu-detail" placeholder="e.g. Focus: Marketing Analytics"/></div>
-      <button class="modal-submit" onclick="addEducation()">Add Education</button>
-    </div>
-    <div class="tab-panel" id="tab-project">
-      <div class="form-group"><label>Project Title</label><input type="text" id="proj-title" placeholder="e.g. Carbon Footprint Dashboard"/></div>
-      <div class="form-group"><label>Type / Tag</label><input type="text" id="proj-tag" placeholder="e.g. Sustainability · Data Viz"/></div>
-      <div class="form-group"><label>Problem Statement</label><textarea id="proj-problem" placeholder="What challenge did this solve?"></textarea></div>
-      <div class="form-group"><label>Approach &amp; Solution</label><textarea id="proj-solution" placeholder="How did you solve it?"></textarea></div>
-      <div class="form-group"><label>Key Impact / Result</label><input type="text" id="proj-impact" placeholder="e.g. 20% reduction in reporting time"/></div>
-      <button class="modal-submit" onclick="addProject()">Add Case Study</button>
-    </div>
-  </div>
-</div>
-
 <script>
-  /* ══════════════════════════════════════
-     LAYER 1 — SECRET SHORTCUT (only you know)
-     Desktop : Shift + A + D together
-     Mobile  : Tap S.R logo 5× quickly
-     LAYER 2 — PASSWORD GATE
-     Password: Sachi@2026
-  ══════════════════════════════════════ */
-
-  const ADMIN_PASSWORD = "Sachi@2026";
-  let adminUnlocked = false;
-  const keysPressed = new Set();
-
-  // ── Desktop shortcut ──
-  document.addEventListener('keydown', (e) => {
-    keysPressed.add(e.key.toUpperCase());
-    if (keysPressed.has('SHIFT') && keysPressed.has('A') && keysPressed.has('D')) {
-      keysPressed.clear();
-      checkAdminAccess();
-    }
-  });
-  document.addEventListener('keyup', (e) => {
-    keysPressed.delete(e.key.toUpperCase());
-  });
-
-  // ── Mobile: tap logo 5× quickly ──
-  let logoTapCount = 0;
-  let logoTapTimer = null;
-  document.getElementById('navLogo').addEventListener('click', () => {
-    logoTapCount++;
-    clearTimeout(logoTapTimer);
-    if (logoTapCount >= 5) {
-      logoTapCount = 0;
-      checkAdminAccess();
-    }
-    logoTapTimer = setTimeout(() => { logoTapCount = 0; }, 2000);
-  });
-
-  // ── LAYER 2: Password check ──
-  function checkAdminAccess() {
-    if (sessionStorage.getItem('adminAuth') === 'true') {
-      activateAdmin();
-      return;
-    }
-    document.getElementById('passwordOverlay').classList.add('open');
-    setTimeout(() => document.getElementById('adminPasswordInput').focus(), 100);
-  }
-
-  function verifyPassword() {
-    const input = document.getElementById('adminPasswordInput').value;
-    if (input === ADMIN_PASSWORD) {
-      sessionStorage.setItem('adminAuth', 'true');
-      document.getElementById('passwordOverlay').classList.remove('open');
-      document.getElementById('adminPasswordInput').value = '';
-      document.getElementById('pwError').style.display = 'none';
-      activateAdmin();
-    } else {
-      document.getElementById('pwError').style.display = 'block';
-      document.getElementById('adminPasswordInput').value = '';
-      document.getElementById('adminPasswordInput').focus();
-      document.getElementById('passwordBox').classList.add('shake');
-      setTimeout(() => document.getElementById('passwordBox').classList.remove('shake'), 500);
-    }
-  }
-
-  function closePasswordOverlay() {
-    document.getElementById('passwordOverlay').classList.remove('open');
-    document.getElementById('adminPasswordInput').value = '';
-    document.getElementById('pwError').style.display = 'none';
-  }
-
-  function closePwOnOverlay(e) {
-    if (e.target.id === 'passwordOverlay') closePasswordOverlay();
-  }
-
-  // Enter / Escape on password input
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('adminPasswordInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter')  verifyPassword();
-      if (e.key === 'Escape') closePasswordOverlay();
-    });
-  });
-
-  // ── Fully activate admin after both layers pass ──
-  function activateAdmin() {
-    adminUnlocked = true;
-    document.getElementById('adminBtn').classList.add('visible');
-    document.querySelectorAll('.delete-btn, .cert-delete-btn').forEach(btn => {
-      btn.style.display = 'inline-block';
-    });
-    showToast('🔓 Admin mode activated');
-    setTimeout(() => openAdmin(), 600);
-  }
-
-  /* ══ NAV ══ */
-  function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
-
-  /* ══ MODAL ══ */
-  function openAdmin()  { document.getElementById('adminModal').classList.add('open'); }
-  function closeAdmin() { document.getElementById('adminModal').classList.remove('open'); }
-  function closeOnOverlay(e) { if (e.target.id === 'adminModal') closeAdmin(); }
-
-  function switchTab(name, btn) {
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-    btn.classList.add('active');
-  }
-
-  /* ══ TOAST ══ */
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2800);
-  }
-
-  /* ══ ADD ACHIEVEMENT ══ */
-  function addAchievement() {
-    const icon  = document.getElementById('ach-icon').value.trim() || '🏆';
-    const title = document.getElementById('ach-title').value.trim();
-    const desc  = document.getElementById('ach-desc').value.trim();
-    if (!title) { alert('Please enter a title.'); return; }
-    const card = document.createElement('div');
-    card.className = 'achievement-card';
-    card.innerHTML = `
-      <button class="delete-btn" onclick="this.parentElement.remove()"
-        style="display:${adminUnlocked ? 'inline-block' : 'none'}">✕</button>
-      <div class="ach-icon">${icon}</div>
-      <h4>${title}</h4>
-      <p>${desc}</p>`;
-    document.getElementById('achievementsGrid').appendChild(card);
-    ['ach-icon','ach-title','ach-desc'].forEach(id => document.getElementById(id).value = '');
-    showToast('✅ Achievement added!'); closeAdmin();
-  }
-
-  /* ══ ADD CERTIFICATION ══ */
-  function addCertification() {
-    const name = document.getElementById('cert-name').value.trim();
-    const body = document.getElementById('cert-body').value.trim();
-    if (!name) { alert('Please enter a certification name.'); return; }
-    const li = document.createElement('li');
-    li.className = 'cert-item';
-    li.style.display = 'flex';
-    li.style.alignItems = 'center';
-    li.innerHTML = `
-      <span class="cert-icon">🎓</span>
-      <span style="flex:1">${name}${body ? ' — ' + body : ''}</span>
-      <button class="cert-delete-btn" onclick="this.parentElement.remove()"
-        style="display:${adminUnlocked ? 'inline-block' : 'none'};
-               background:none; border:none; color:#ff4d4d;
-               cursor:pointer; font-size:0.85rem; margin-left:auto;">✕</button>`;
-    document.getElementById('certsList').appendChild(li);
-    ['cert-name','cert-body'].forEach(id => document.getElementById(id).value = '');
-    showToast('✅ Certification added!'); closeAdmin();
-  }
-
-  /* ══ ADD SKILL ══ */
-  function addSkill() {
-    const cat   = parseInt(document.getElementById('skill-cat').value);
-    const skill = document.getElementById('skill-name').value.trim();
-    if (!skill) { alert('Please enter a skill name.'); return; }
-    const lists = document.querySelectorAll('#skillsGrid .skill-pill-list');
-    if (lists[cat]) {
-      const pill = document.createElement('span');
-      pill.className = 'skill-pill';
-      if (adminUnlocked) {
-        pill.style.display = 'inline-flex';
-        pill.style.alignItems = 'center';
-        pill.style.gap = '4px';
-        pill.innerHTML = `${skill}
-          <button onclick="this.parentElement.remove()"
-            style="background:none;border:none;color:#ff4d4d;cursor:pointer;
-                   font-size:0.75rem;padding:0;line-height:1;">✕</button>`;
-      } else {
-        pill.textContent = skill;
-      }
-      lists[cat].appendChild(pill);
-    }
-    document.getElementById('skill-name').value = '';
-    showToast('✅ Skill added!'); closeAdmin();
-  }
-
-  /* ══ ADD EDUCATION ══ */
-  function addEducation() {
-    const degree = document.getElementById('edu-degree').value.trim();
-    const year   = document.getElementById('edu-year').value.trim();
-    const inst   = document.getElementById('edu-inst').value.trim();
-    const detail = document.getElementById('edu-detail').value.trim();
-    if (!degree) { alert('Please enter a degree.'); return; }
-    const card = document.createElement('div');
-    card.className = 'edu-card';
-    card.style.position = 'relative';
-    card.innerHTML = `
-      <button class="delete-btn" onclick="this.parentElement.remove()"
-        style="display:${adminUnlocked ? 'inline-block' : 'none'};
-               position:absolute; top:10px; right:10px;
-               background:none; border:none; color:#ff4d4d;
-               cursor:pointer; font-size:0.85rem;">✕</button>
-      <div class="edu-card-year">${year}</div>
-      <h4>${degree}</h4>
-      <p>${inst}${detail ? '<br>' + detail : ''}</p>`;
-    document.getElementById('eduGrid').appendChild(card);
-    ['edu-degree','edu-year','edu-inst','edu-detail'].forEach(id => document.getElementById(id).value = '');
-    showToast('✅ Education added!'); closeAdmin();
-  }
-
-  /* ══ ADD PROJECT ══ */
-  function addProject() {
-    const title   = document.getElementById('proj-title').value.trim();
-    const tag     = document.getElementById('proj-tag').value.trim();
-    const problem = document.getElementById('proj-problem').value.trim();
-    const sol     = document.getElementById('proj-solution').value.trim();
-    const impact  = document.getElementById('proj-impact').value.trim();
-    if (!title) { alert('Please enter a project title.'); return; }
-    const cs = document.createElement('div');
-    cs.className = 'case-study';
-    cs.style.position = 'relative';
-    cs.innerHTML = `
-      <button class="delete-btn" onclick="this.parentElement.remove()"
-        style="display:${adminUnlocked ? 'inline-block' : 'none'};
-               position:absolute; top:16px; right:16px;
-               background:none; border:none; color:#ff4d4d;
-               cursor:pointer; font-size:0.85rem;">✕</button>
-      <span class="case-tag">${tag || 'Project'}</span>
-      <h3>${title}</h3>
-      <p class="case-meta">Added · 2026</p>
-      <div class="case-steps">
-        <div class="case-step"><div class="case-step-label">Problem</div><p>${problem || '—'}</p></div>
-        <div class="case-step"><div class="case-step-label">Solution</div><p>${sol || '—'}</p></div>
-      </div>
-      ${impact ? `<div><span class="impact-badge">✅ ${impact}</span></div>` : ''}`;
-    document.getElementById('casestudies').appendChild(cs);
-    ['proj-title','proj-tag','proj-problem','proj-solution','proj-impact']
-      .forEach(id => document.getElementById(id).value = '');
-    showToast('✅ Case Study added!'); closeAdmin();
-  }
-
-  /* ══ NEWSLETTER ══ */
-  function subscribeNewsletter(e) {
-    e.preventDefault();
-    showToast(`✅ Subscribed: ${document.getElementById('nlEmail').value}`);
-    document.getElementById('nlEmail').value = '';
-  }
-
-  /* ══ SCROLL ANIMATION ══ */
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = '1';
-        e.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.skill-card,.case-study,.edu-card,.achievement-card,.about-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(24px)';
-    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    observer.observe(el);
-  });
+(function(){
+"use strict";
+var $=function(s,c){return(c||document).querySelector(s)},$$=function(s,c){return[].slice.call((c||document).querySelectorAll(s))};
+var RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+/* ───────── content ───────── */
+var D={
+projects:[
+ {tag:"Supply chain · Analytics · Web app",title:"Uphopro",sub:"Digital supply chain and inventory optimisation platform for upholstery manufacturers.",meta:"Personal project · Wix Velo · 2026",
+  steps:{Context:"Upholstery manufacturers juggle hides with uneven defect clusters, and gaps between polyurethane foam and imported cover lead times.",Problem:"Floor congestion, cutting scrap, procurement cycles that do not talk to each other, and assembly takt time out of step.",Approach:"Dynamic reorder points with supplier lead-time variance, 2D nesting yield optimisation and ABC-XYZ inventory segmentation.",Solution:"A Wix web app joining raw material inventory, BOM management, automated quotes and B2B customer connection.",Impact:"Less floor congestion, synchronised assembly kitting and measurable operational gains."},
+  badges:["Cutting scrap < 3%","B2B synchronised","Optimised inventory"]},
+ {tag:"Product engineering · Quality · DFMEA",title:"Footwear DFMEA",sub:"Taking defects out of mass production for Puma and Comet at Tata International.",meta:"Tata International Limited · Graduate Engineer Trainee · 2025–2026",
+  steps:{Context:"Managing Puma and Comet footwear from technical design through mass production.",Problem:"Pattern mismatches, sole detachment and seam bursts were migrating from design into mass production, causing rejections and rework.",Approach:"Cross-functional DFMEA workflows linking 2D/3D CAD design freeze, SATRA peel adhesion validation and 3-gate pilot trial sign-off.",Solution:"Standardised SOPs across lasting and stitching lines with quality gates at each stage, a technical bridge between design and factory.",Impact:"Fewer critical bonding rejections, consistent quality across lines and a smoother cut-to-box timeline for two international brands."},
+  badges:["Better downstream outcome","SOPs standardised","Cut-to-box streamlined"]}
+],
+skills:[{ic:"📊",t:"Marketing & strategy",i:["Technical marketing","User research","Sustainable materials","Market analysis","Product positioning","Go-to-market"]},
+ {ic:"🔢",t:"Analytics & systems",i:["Power BI","SQL","Python","Advanced Excel"]},
+ {ic:"🎨",t:"Design & prototyping",i:["Figma","Adobe XD","Photoshop","AutoCAD","Dimension CAD","Shoemaster"]},
+ {ic:"⚙️",t:"Engineering & quality",i:["DFMEA","SOP standardisation","Workflow optimisation","Process sequencing","Trial sign-off"]}],
+edu:[{y:"2026 – 2028 · Upcoming",d:"MBA, Marketing & Sustainability",s:"PSG Institute of Management (PSGIM), Coimbatore",x:"Sustainable business strategy and product marketing"},
+ {y:"2021 – 2025",d:"B.Tech, Leather Technology",s:"Anna University (CSIR-CLRI), Guindy, Chennai",x:"Materials engineering, product design, merchandising"}],
+certs:["🎓 Google UX Design Specialization, Coursera","🎓 AutoCAD Certified User"],
+ach:[{ic:"🏐",t:"University volleyball champion",d:"Inter-collegiate winner: team leadership and competitive drive."},
+ {ic:"⚽",t:"University football winner",d:"Inter-collegiate tournament winner: strategy under pressure."},
+ {ic:"🏃",t:"Marathon runner",d:"Consistent marathon participant: discipline and long-term goal-setting."},
+ {ic:"🌱",t:"NSS, school restoration",d:"Led school restoration drives and sustainable community initiatives."}]};
+/* ───────── render ───────── */
+var adm=false;
+function del(k,i){return'<button class="del" data-k="'+k+'" data-i="'+i+'" aria-label="Delete">✕</button>'}
+function render(){
+ $("#rail").innerHTML=D.projects.map(function(p,i){return'<article class="pc" data-i="'+i+'" data-s data-c="Open">'+del("projects",i)+'<span class="n">0'+(i+1)+'</span><div><span class="tg">'+esc(p.tag)+'</span><h3>'+esc(p.title)+'</h3><p>'+esc(p.sub)+'</p></div><div><div class="bd">'+(p.badges||[]).map(function(b){return"<span>✓ "+esc(b)+"</span>"}).join("")+'</div><button class="b a" data-open="'+i+'">Read the case</button></div></article>'}).join("");
+ $("#skGrid").innerHTML=D.skills.map(function(g){return'<div class="sg rv in"><div class="ic">'+g.ic+'</div><h3>'+esc(g.t)+'</h3><div class="pl">'+g.i.map(function(s,j){return"<span>"+esc(s)+"</span>"}).join("")+'</div></div>'}).join("");
+ $("#edGrid").innerHTML=D.edu.map(function(e,i){return'<div class="er rv in">'+del("edu",i)+'<time>'+esc(e.y)+'</time><h3>'+esc(e.d)+'</h3><p>'+esc(e.s)+'<br>'+esc(e.x||"")+'</p></div>'}).join("");
+ $("#ceList").innerHTML=D.certs.map(function(c,i){return'<span>'+esc(c)+del("certs",i)+'</span>'}).join("");
+ $("#acGrid").innerHTML=D.ach.map(function(a,i){return'<div class="ach rv in" data-s>'+del("ach",i)+'<div class="ic">'+esc(a.ic)+'</div><h3>'+esc(a.t)+'</h3><p>'+esc(a.d)+'</p></div>'}).join("");
+ bind();tilt()}
+document.addEventListener("click",function(e){var d=e.target.closest(".del");if(d){D[d.dataset.k].splice(+d.dataset.i,1);render();toast("Removed")}});
+/* ───────── sound (synthesised, no files) ───────── */
+var ac,master,soundOn=false,lastT=0;
+function bell(){if(!soundOn)return;var n=[392,440,523.25,587.33,659.25,783.99][Math.floor(Math.random()*6)],t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type="sine";o.frequency.value=n;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+.05);g.gain.exponentialRampToValueAtTime(.0001,t+4);o.connect(g).connect(master);o.start(t);o.stop(t+4.2)}
+function startAudio(){
+ try{ac=new(window.AudioContext||window.webkitAudioContext)()}catch(e){return}
+ master=ac.createGain();master.gain.value=0;master.connect(ac.destination);
+ var lp=ac.createBiquadFilter();lp.type="lowpass";lp.frequency.value=420;lp.connect(master);
+ [[55,"sawtooth",.035],[55.5,"sawtooth",.035],[82.4,"sine",.07],[110.2,"sine",.05],[164.8,"triangle",.02]].forEach(function(a){var o=ac.createOscillator(),g=ac.createGain();o.type=a[1];o.frequency.value=a[0];g.gain.value=a[2];o.connect(g).connect(lp);o.start()});
+ var l=ac.createOscillator(),lg=ac.createGain();l.frequency.value=.06;lg.gain.value=200;l.connect(lg).connect(lp.frequency);l.start();
+ setInterval(bell,3800);soundOn=true;master.gain.linearRampToValueAtTime(.8,ac.currentTime+4);chime()}
+function chime(){if(!soundOn)return;[523.25,783.99,1046.5].forEach(function(f,i){var t=ac.currentTime+i*.09,o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.setValueAtTime(.06,t);g.gain.exponentialRampToValueAtTime(.0001,t+1.2);o.connect(g).connect(master);o.start(t);o.stop(t+1.3)})}
+function tick(f,v){if(!soundOn)return;var n=performance.now();if(n-lastT<60)return;lastT=n;var t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type="sine";o.frequency.setValueAtTime(f||900,t);o.frequency.exponentialRampToValueAtTime((f||900)*.6,t+.07);g.gain.setValueAtTime(v||.04,t);g.gain.exponentialRampToValueAtTime(.0001,t+.09);o.connect(g).connect(master);o.start(t);o.stop(t+.1)}
+function whoosh(){if(!soundOn)return;var t=ac.currentTime,b=ac.createBuffer(1,ac.sampleRate,ac.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=Math.random()*2-1;var s=ac.createBufferSource();s.buffer=b;var f=ac.createBiquadFilter();f.type="bandpass";f.Q.value=1.2;f.frequency.setValueAtTime(300,t);f.frequency.exponentialRampToValueAtTime(2200,t+.7);var g=ac.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+.25);g.gain.linearRampToValueAtTime(0,t+.9);s.connect(f).connect(g).connect(master);s.start(t)}
+function setSound(on){if(!ac)return startAudio();soundOn=on;master.gain.linearRampToValueAtTime(on?.8:0,ac.currentTime+.6);$("#snd").classList.toggle("mute",!on)}
+$("#snd").onclick=function(){if(!ac){startAudio();$("#snd").classList.remove("mute");return}setSound(!soundOn)};
+/* ───────── gate ───────── */
+function enter(snd){if(snd)startAudio();else $("#snd").classList.add("mute");$("#gate").classList.add("off");document.body.classList.add("go");document.documentElement.classList.add("go");setTimeout(function(){$("#gate").style.display="none"},1300)}
+$("#gOn").onclick=function(){enter(true)};$("#gOff").onclick=function(){enter(false)};
+/* ───────── 3D scene: tunnel of particles + rings, camera follows scroll ───────── */
+var cv=$("#scene"),cx=cv.getContext("2d"),W,H,pts=[],L=90,mx=0,my=0,sx=0,sy=0,prog=0,camZ=0;
+function size(){var r=Math.min(devicePixelRatio||1,2);W=cv.width=innerWidth*r;H=cv.height=innerHeight*r;cx.setTransform(r,0,0,r,0,0);W/=r;H/=r}
+size();addEventListener("resize",size);
+for(var i=0;i<700;i++){var a=Math.random()*6.283,r=3+Math.random()*9;pts.push({x:Math.cos(a)*r,y:Math.sin(a)*r,z:Math.random()*L,s:Math.random()})}
+addEventListener("mousemove",function(e){mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+function draw(t){
+ var sc=scrollY/Math.max(1,document.documentElement.scrollHeight-innerHeight);prog+=(sc-prog)*.06;camZ=prog*L*3+t*.003;sx+=(mx-sx)*.05;sy+=(my-sy)*.05;
+ cx.clearRect(0,0,W,H);var f=Math.min(W,H)*.9,ox=W/2-sx*140,oy=H/2-sy*90;
+ for(var i=0;i<pts.length;i++){var p=pts[i],d=((p.z-camZ)%L+L)%L+.5,k=f/d/4;var X=ox+p.x*k,Y=oy+p.y*k;if(X<0||X>W||Y<0||Y>H)continue;var al=Math.min(1,(1-d/L)*1.6)*(.25+p.s*.6);cx.fillStyle=p.s>.93?"rgba(0,229,160,"+al+")":"rgba(236,232,223,"+al*.8+")";var s=Math.min(3.2,Math.max(.4,k*.09*(.6+p.s)));cx.fillRect(X,Y,s,s)}
+ cx.lineWidth=1;for(var j=0;j<9;j++){var z=j*(L/9),dd=((z-camZ)%L+L)%L+.5,R=f/dd/4*8,al2=Math.min(1,(1-dd/L)*1.4)*.28;cx.strokeStyle="rgba(0,229,160,"+al2+")";cx.beginPath();cx.ellipse(ox,oy,R,R*.92,0,0,6.283);cx.stroke()}
+ if(!RM)requestAnimationFrame(draw)}
+requestAnimationFrame(draw);if(RM)addEventListener("scroll",function(){requestAnimationFrame(draw)});
+/* ───────── scroll effects ───────── */
+var man=$("#man");man.innerHTML=man.textContent.trim().split(/\s+/).map(function(w){return'<span class="w">'+w+"</span>"}).join(" ");var ws=$$(".w",man);
+var rail=$("#rail");
+function tilt(){var cs=$$(".pc",rail),rc=rail.getBoundingClientRect(),mid=rc.left+rc.width/2,best=null,bd=1e9;cs.forEach(function(c){var r=c.getBoundingClientRect(),off=(r.left+r.width/2-mid)/r.width,a=Math.abs(off);c.style.transform="rotateY("+(-off*32)+"deg) translateZ("+(-a*140)+"px) scale("+(1-Math.min(a,1)*.1)+")";c.style.opacity=1-Math.min(a,1.4)*.35;if(a<bd){bd=a;best=c}});cs.forEach(function(c){c.classList.toggle("c",c===best)});if(best&&best!==tilt.l){if(tilt.l)tick(660,.03);tilt.l=best}}
+rail.addEventListener("scroll",tilt);
+function onScroll(){var r=man.getBoundingClientRect(),p=Math.min(1,Math.max(0,(innerHeight*.85-r.top)/(r.height+innerHeight*.3)));ws.forEach(function(w,i){w.classList.toggle("on",RM||i/ws.length<p*1.05)})}
+addEventListener("scroll",onScroll,{passive:true});onScroll();
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");if(e.target.dataset.n)count(e.target);io.unobserve(e.target)}})},{threshold:.2});
+$$(".rv,[data-n]").forEach(function(e){io.observe(e)});
+function count(el){var n=+el.dataset.n,p=el.dataset.p||"",c=0;(function s(){c+=.08;el.textContent=Math.min(n,Math.ceil(c*n/2))+(c*n/2>=n?p:"");if(c*n/2<n)setTimeout(s,60)})()}
+// dots + section whoosh
+var secs=$$("main section"),dots=$("#dots");
+dots.innerHTML=secs.map(function(s){return'<a href="#'+s.id+'" data-s><span>'+s.id+'</span></a>'}).join("");
+var so=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){$$("a",dots).forEach(function(a){a.classList.toggle("on",a.getAttribute("href")==="#"+e.target.id)});if(document.body.classList.contains("go"))whoosh()}})},{threshold:.55});
+secs.forEach(function(s){so.observe(s)});
+// portal tilt
+var po=$("#portal");addEventListener("mousemove",function(e){po.style.setProperty("--ry",((e.clientX/innerWidth-.5)*16)+"deg");po.style.setProperty("--rx",(-(e.clientY/innerHeight-.5)*12)+"deg")});
+/* ───────── cursor, hover sounds ───────── */
+var cur=$("#cur"),px=0,py=0,qx=0,qy=0;
+if(matchMedia("(pointer:fine)").matches&&!RM){addEventListener("mousemove",function(e){px=e.clientX;py=e.clientY});(function m(){qx+=(px-qx)*.2;qy+=(py-qy)*.2;cur.style.transform="translate("+qx+"px,"+qy+"px)";requestAnimationFrame(m)})()}
+function bind(){$$("[data-s],a,button").forEach(function(el){if(el._b)return;el._b=1;el.addEventListener("mouseenter",function(){tick(980,.035);cur.classList.add("h");cur.textContent=el.dataset.c||""});el.addEventListener("mouseleave",function(){cur.classList.remove("h");cur.textContent=""});el.addEventListener("click",function(){tick(520,.06)})})}
+// drag rail + buttons
+var dn=false,x0=0,s0=0;rail.addEventListener("pointerdown",function(e){if(e.target.closest("button"))return;dn=true;x0=e.clientX;s0=rail.scrollLeft;rail.style.scrollSnapType="none"});
+addEventListener("pointermove",function(e){if(dn)rail.scrollLeft=s0-(e.clientX-x0)});
+addEventListener("pointerup",function(){if(dn){dn=false;rail.style.scrollSnapType="x mandatory"}});
+function step(d){var c=$(".pc",rail);rail.scrollBy({left:d*(c.offsetWidth+44),behavior:"smooth"})}
+$("#prev").onclick=function(){step(-1)};$("#next").onclick=function(){step(1)};
+/* ───────── nav ───────── */
+$("#ham").onclick=function(){$("#nav").classList.toggle("open")};$$("#nav a").forEach(function(a){a.addEventListener("click",function(){$("#nav").classList.remove("open")})});
+/* ───────── case modal ───────── */
+document.addEventListener("click",function(e){var o=e.target.closest("[data-open]");if(o){var p=D.projects[+o.dataset.open];$("#cTag").textContent=p.tag;$("#cTitle").textContent=p.title;$("#cMeta").textContent=p.meta||"";$("#cSteps").innerHTML=Object.keys(p.steps).map(function(k){return"<div><b>"+esc(k)+"</b><p>"+esc(p.steps[k])+"</p></div>"}).join("");$("#cBd").innerHTML=(p.badges||[]).map(function(b){return"<span>✓ "+esc(b)+"</span>"}).join("");$("#caseOv").classList.add("open");whoosh()}
+ if(e.target.closest("[data-close]")||e.target.classList.contains("ov"))$$(".ov").forEach(function(v){v.classList.remove("open")})});
+addEventListener("keydown",function(e){if(e.key==="Escape")$$(".ov").forEach(function(v){v.classList.remove("open")})});
+function toast(m){var t=$("#toast");t.textContent=m;t.classList.add("show");setTimeout(function(){t.classList.remove("show")},2400)}
+/* ───────── admin (client-side only, see note in reply) ───────── */
+var HASH="2b29d6cf0855c1784f67a8650e3493680ad3cc4b11986777df3ca5b4f1095c3a";
+function sha(s){return crypto.subtle.digest("SHA-256",new TextEncoder().encode(s)).then(function(b){return[].slice.call(new Uint8Array(b)).map(function(x){return("0"+x.toString(16)).slice(-2)}).join("")})}
+function access(){if(sessionStorage.getItem("adm")==="1")return unlock();$("#pwOv").classList.add("open");setTimeout(function(){$("#pw").focus()},80)}
+function unlock(){adm=true;document.body.classList.add("adm");$("#pwOv").classList.remove("open");toast("Admin mode on");setTimeout(function(){openAd()},500)}
+function check(){sha($("#pw").value).then(function(h){if(h===HASH){sessionStorage.setItem("adm","1");$("#pw").value="";$("#pwE").style.display="none";unlock()}else{$("#pwE").style.display="block";$("#pw").value=""}})}
+$("#pwGo").onclick=check;$("#pw").addEventListener("keydown",function(e){if(e.key==="Enter")check()});
+var keys={};addEventListener("keydown",function(e){keys[e.key.toUpperCase()]=1;if(keys.SHIFT&&keys.A&&keys.D){keys={};access()}});addEventListener("keyup",function(e){delete keys[e.key.toUpperCase()]});
+var taps=0,tt;$(".logo").addEventListener("click",function(){taps++;clearTimeout(tt);if(taps>=5){taps=0;access()}tt=setTimeout(function(){taps=0},2000)});
+$("#adminBtn").onclick=openAd;
+var F={Achievement:[["ic","Icon / emoji","🏆"],["t","Title",""],["d","Description","","ta"]],Certification:[["n","Name","e.g. HubSpot Content Marketing"],["b","Issuing body",""]],Skill:[["g","Category","","sel"],["s","Skill",""]],Education:[["d","Degree","e.g. MBA"],["y","Year",""],["s","Institution",""],["x","Details",""]],Project:[["title","Title",""],["tag","Tag","e.g. Sustainability · Data viz"],["p","Problem","","ta"],["so","Solution","","ta"],["im","Key result",""]]},cur2="Achievement";
+function openAd(){$("#adOv").classList.add("open");tabs()}
+function tabs(){$("#adTabs").innerHTML=Object.keys(F).map(function(k){return'<button class="b'+(k===cur2?" f":"")+'" data-t="'+k+'">'+k+"</button>"}).join("");$("#adForm").innerHTML=F[cur2].map(function(f){var i='<input id="f_'+f[0]+'" placeholder="'+esc(f[2])+'">';if(f[3]==="ta")i='<textarea id="f_'+f[0]+'" rows="3"></textarea>';if(f[3]==="sel")i='<select id="f_g">'+D.skills.map(function(g,j){return'<option value="'+j+'">'+esc(g.t)+"</option>"}).join("")+"</select>";return'<div class="fg"><label>'+f[1]+"</label>"+i+"</div>"}).join("")}
+$("#adTabs").addEventListener("click",function(e){var b=e.target.closest("[data-t]");if(b){cur2=b.dataset.t;tabs()}});
+$("#adGo").onclick=function(){var v=function(k){return($("#f_"+k).value||"").trim()};
+ if(cur2==="Achievement"){if(!v("t"))return toast("Add a title");D.ach.push({ic:v("ic")||"🏆",t:v("t"),d:v("d")})}
+ if(cur2==="Certification"){if(!v("n"))return toast("Add a name");D.certs.push("🎓 "+v("n")+(v("b")?", "+v("b"):""))}
+ if(cur2==="Skill"){if(!v("s"))return toast("Add a skill");D.skills[+v("g")].i.push(v("s"))}
+ if(cur2==="Education"){if(!v("d"))return toast("Add a degree");D.edu.push({y:v("y"),d:v("d"),s:v("s"),x:v("x")})}
+ if(cur2==="Project"){if(!v("title"))return toast("Add a title");D.projects.push({tag:v("tag")||"Project",title:v("title"),sub:v("p"),meta:"Added · 2026",steps:{Problem:v("p")||"-",Solution:v("so")||"-"},badges:v("im")?[v("im")]:[]})}
+ render();$("#adOv").classList.remove("open");toast("Added (this browser only)")};
+/* ───────── start ───────── */
+render();
+})();
 </script>
 </body>
 </html>
